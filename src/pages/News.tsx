@@ -8,8 +8,8 @@ const News = () => {
   const newsArticles = [
     {
       id: 1,
-      title: "Stunning Comeback Victory Against Regional Champions",
-      excerpt: "In a thrilling match that went down to the wire, our football team staged an incredible comeback, scoring three goals in the final 15 minutes to secure a 4-3 victory.",
+      title: "Record-Breaking Finals Draw 5,000 Spectators",
+      excerpt: "Our Football Championship Finals saw unprecedented attendance with over 5,000 fans witnessing an incredible finale as Riverside Academy claimed victory in a dramatic penalty shootout.",
       author: "Coach Martinez",
       date: "Feb 5, 2025",
       category: "Match Recap",
@@ -26,8 +26,8 @@ const News = () => {
     },
     {
       id: 3,
-      title: "Three Players Selected for State Team",
-      excerpt: "Congratulations to Marcus Johnson, Sarah Williams, and James Rodriguez for being selected to represent our state in the upcoming national championship.",
+      title: "Tournament Expansion: 15 New Teams Register",
+      excerpt: "We're thrilled to announce that 15 additional teams have registered for our upcoming Regional Multi-Sport Tournament, bringing total participation to record levels.",
       author: "Sports Director",
       date: "Jan 30, 2025",
       category: "Achievement",
@@ -44,8 +44,8 @@ const News = () => {
     },
     {
       id: 5,
-      title: "Youth Development Program Expands",
-      excerpt: "Due to overwhelming interest, we're expanding our youth development program to include more age groups and specialized coaching sessions.",
+      title: "New Youth Tournament Series Launched",
+      excerpt: "Due to overwhelming interest, we're launching a dedicated youth tournament series to provide competitive opportunities for younger athletes across all sports.",
       author: "Youth Coordinator",
       date: "Jan 25, 2025",
       category: "Program Update",
@@ -53,8 +53,8 @@ const News = () => {
     },
     {
       id: 6,
-      title: "Record-Breaking Attendance at Home Game",
-      excerpt: "Last weekend's home game saw a record-breaking 2,500 spectators, creating an electric atmosphere that pushed our team to victory.",
+      title: "Partnership with Local Sports Academies Announced",
+      excerpt: "Sports Club of SSC partners with five local academies to expand tournament reach and provide more opportunities for emerging athletes to compete.",
       author: "PR Team",
       date: "Jan 22, 2025",
       category: "Club News",

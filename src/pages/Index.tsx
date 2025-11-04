@@ -37,22 +37,22 @@ const Index = () => {
   }, []);
 
   const quickStats = [
-    { label: "Matches Won", value: "87", icon: Trophy },
-    { label: "Goals Scored", value: "342", icon: Target },
-    { label: "Active Players", value: "120+", icon: Target },
-    { label: "Championships", value: "15", icon: Trophy },
+    { label: "Tournaments Organized", value: "87", icon: Trophy },
+    { label: "Participating Teams", value: "342", icon: Target },
+    { label: "Registered Athletes", value: "2400+", icon: Target },
+    { label: "Events This Year", value: "45", icon: Trophy },
   ];
 
-  const featuredPlayers = [
-    { name: "Marcus Johnson", position: "Forward", goals: 24, image: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400&q=80" },
-    { name: "Sarah Williams", position: "Midfielder", assists: 18, image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80" },
-    { name: "James Rodriguez", position: "Point Guard", points: 456, image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80" },
+  const featuredTournaments = [
+    { name: "Inter-School Football Championship", participants: "24 Teams", prize: "$5,000", image: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400&q=80" },
+    { name: "Annual Basketball League", participants: "18 Teams", prize: "$3,500", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80" },
+    { name: "Multi-Sport Regional Cup", participants: "32 Teams", prize: "$8,000", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80" },
   ];
 
   const upcomingEvents = [
-    { title: "vs Riverside Academy", date: "Feb 15", time: "3:00 PM", sport: "Football" },
-    { title: "vs Mountain View High", date: "Feb 20", time: "6:00 PM", sport: "Basketball" },
-    { title: "Regional Tournament", date: "Mar 1", time: "TBD", sport: "Multi-Sport" },
+    { title: "Football Championship Finals", date: "Feb 15", time: "3:00 PM", sport: "Football" },
+    { title: "Basketball League Semi-Finals", date: "Feb 20", time: "6:00 PM", sport: "Basketball" },
+    { title: "Regional Multi-Sport Tournament", date: "Mar 1", time: "TBD", sport: "Multi-Sport" },
   ];
 
   return (
@@ -73,7 +73,7 @@ const Index = () => {
             Sports Club <span className="text-primary text-glow">of SSC</span>
           </h1>
           <p className="text-2xl md:text-3xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Where Athletic Passion Meets Analytical Precision
+            Organizing Excellence in Sports Competitions
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/analytics">
@@ -116,8 +116,8 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <Card className="hover-lift gradient-hero border-primary/50">
             <CardContent className="pt-12 pb-12 text-center">
-              <h2 className="text-4xl md:text-5xl font-bebas text-foreground mb-2">Next Match</h2>
-              <p className="text-xl text-muted-foreground mb-8">vs Riverside Academy</p>
+            <h2 className="text-4xl md:text-5xl font-bebas text-foreground mb-2">Next Event</h2>
+              <p className="text-xl text-muted-foreground mb-8">Football Championship Finals</p>
               
               <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
                 {Object.entries(timeLeft).map(([unit, value]) => (
@@ -130,7 +130,7 @@ const Index = () => {
               
               <Link to="/club">
                 <Button size="lg" className="mt-8 text-lg font-bebas px-8 py-6 gradient-orange hover-lift">
-                  View All Fixtures <Calendar className="ml-2" />
+                  View All Events <Calendar className="ml-2" />
                 </Button>
               </Link>
             </CardContent>
@@ -143,28 +143,26 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-5xl md:text-6xl font-bebas text-foreground mb-4">
-              Player <span className="text-primary">Spotlight</span>
+              Featured <span className="text-primary">Tournaments</span>
             </h2>
-            <p className="text-xl text-muted-foreground">Meet our top performers</p>
+            <p className="text-xl text-muted-foreground">Our premier sports competitions</p>
           </div>
 
           <Carousel className="max-w-5xl mx-auto">
             <CarouselContent>
-              {featuredPlayers.map((player, index) => (
+              {featuredTournaments.map((tournament, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                   <Card className="hover-lift overflow-hidden">
                     <div 
                       className="h-80 bg-cover bg-center relative"
-                      style={{ backgroundImage: `url(${player.image})` }}
+                      style={{ backgroundImage: `url(${tournament.image})` }}
                     >
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent" />
                       <div className="absolute bottom-0 left-0 right-0 p-6">
-                        <h3 className="text-3xl font-bebas text-foreground mb-1">{player.name}</h3>
-                        <p className="text-primary font-semibold mb-2">{player.position}</p>
+                        <h3 className="text-3xl font-bebas text-foreground mb-1">{tournament.name}</h3>
+                        <p className="text-primary font-semibold mb-2">{tournament.participants}</p>
                         <div className="flex gap-4 text-sm">
-                          {player.goals && <span className="text-muted-foreground">⚽ {player.goals} Goals</span>}
-                          {player.assists && <span className="text-muted-foreground">🎯 {player.assists} Assists</span>}
-                          {player.points && <span className="text-muted-foreground">🏀 {player.points} Points</span>}
+                          <span className="text-muted-foreground">🏆 Prize Pool: {tournament.prize}</span>
                         </div>
                       </div>
                     </div>
@@ -185,7 +183,7 @@ const Index = () => {
             <h2 className="text-5xl md:text-6xl font-bebas text-foreground mb-4">
               Upcoming <span className="text-primary">Events</span>
             </h2>
-            <p className="text-xl text-muted-foreground">Don't miss these exciting matches</p>
+            <p className="text-xl text-muted-foreground">Don't miss these exciting competitions</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">

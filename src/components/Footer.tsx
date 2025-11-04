@@ -33,7 +33,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-sm text-muted-foreground">
-              Where passion meets precision. Join us in celebrating athletic excellence and team spirit.
+              Organizing premier sports tournaments and leagues. Where athletic passion meets professional event management.
             </p>
           </div>
 

@@ -49,7 +49,7 @@ const Contact = () => {
               Get In <span className="text-primary text-glow">Touch</span>
             </h1>
             <p className="text-xl text-muted-foreground">
-              Have questions? We'd love to hear from you.
+              Questions about tournaments or registration? We're here to help.
             </p>
           </div>
 
