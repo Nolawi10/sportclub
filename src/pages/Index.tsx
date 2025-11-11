@@ -44,15 +44,15 @@ const Index = () => {
   ];
 
   const featuredTournaments = [
-    { name: "Inter-School Football Championship", participants: "24 Teams", prize: "$5,000", image: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400&q=80" },
-    { name: "Annual Basketball League", participants: "18 Teams", prize: "$3,500", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80" },
-    { name: "Multi-Sport Regional Cup", participants: "32 Teams", prize: "$8,000", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80" },
+    { name: "Inter-Class Football Championship", participants: "Grades 9-12 (A-C)", prize: "$5,000", image: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400&q=80" },
+    { name: "Annual Basketball League", participants: "Grades 9-12 (A-C)", prize: "$3,500", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80" },
+    { name: "Chess & Volleyball Tournament", participants: "All Classes", prize: "$2,500", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80" },
   ];
 
   const upcomingEvents = [
-    { title: "Football Championship Finals", date: "Feb 15", time: "3:00 PM", sport: "Football" },
-    { title: "Basketball League Semi-Finals", date: "Feb 20", time: "6:00 PM", sport: "Basketball" },
-    { title: "Regional Multi-Sport Tournament", date: "Mar 1", time: "TBD", sport: "Multi-Sport" },
+    { title: "11A vs 11C Football Finals", date: "Feb 22", time: "3:00 PM", sport: "Football" },
+    { title: "Basketball Tournament (Grades 9-12)", date: "Feb 28", time: "6:00 PM", sport: "Basketball" },
+    { title: "Chess & Volleyball Championships", date: "Mar 5", time: "2:00 PM", sport: "Multi-Sport" },
   ];
 
   return (

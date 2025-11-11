@@ -24,9 +24,9 @@ const Predictions = () => {
   ];
 
   const upcomingMatches = [
-    { id: 1, home: "Riverside Academy", away: "Westside High", date: "Feb 25, 2025", category: "Football Finals" },
-    { id: 2, home: "Mountain View", away: "Central College", date: "Feb 27, 2025", category: "Basketball Semi-Finals" },
-    { id: 3, home: "North Stars", away: "South United", date: "Mar 1, 2025", category: "Football Quarter-Finals" },
+    { id: 1, home: "11A", away: "11C", date: "Feb 22, 2025", category: "Football Finals" },
+    { id: 2, home: "12B", away: "10A", date: "Feb 28, 2025", category: "Basketball Tournament" },
+    { id: 3, home: "9C", away: "11B", date: "Mar 5, 2025", category: "Volleyball Championship" },
   ];
 
   const handleVote = () => {
@@ -86,7 +86,9 @@ const Predictions = () => {
                   <CardTitle className="text-3xl font-bebas">Player of the Tournament</CardTitle>
                 </div>
                 <CardDescription>
-                  Vote for the player who has demonstrated remarkable skill, dedication, and sportsmanship throughout the tournament.
+                  Vote for the player who has demonstrated remarkable skill, dedication, and sportsmanship. 
+                  Nominees were selected based on outstanding performances during both group stage and knockout stage, 
+                  approved by each class captain.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -124,14 +126,17 @@ const Predictions = () => {
                 </div>
 
                 <div className="pt-4 border-t">
-                  <h4 className="font-semibold mb-2">Selection Criteria:</h4>
+                  <h4 className="font-semibold mb-2">🔍 Selection Criteria for Man of the Tournament:</h4>
                   <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Team Captains' Choice (20%)</li>
-                    <li>• Overall Performance (25%)</li>
-                    <li>• Final Game Performance (30%)</li>
-                    <li>• Expert Vote (15%)</li>
-                    <li>• Public Poll (10%)</li>
+                    <li>• <strong>Team Captains' Choice</strong> - based solely on observations</li>
+                    <li>• <strong>Overall Performance</strong> - throughout the tournament</li>
+                    <li>• <strong>Final Game Performance</strong> - significant weight given</li>
+                    <li>• <strong>Expert Vote</strong> - final decision after last game</li>
+                    <li>• <strong>Poll Value</strong> - results from this fan voting</li>
                   </ul>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    All criteria have different percentages in determining the final Man of the Tournament
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -196,19 +201,19 @@ const Predictions = () => {
                 ))}
 
                 <div className="pt-4 border-t">
-                  <h4 className="font-semibold mb-2">Leaderboard:</h4>
+                  <h4 className="font-semibold mb-2">Top Predictors:</h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span>1. John Smith</span>
-                      <span className="text-primary font-semibold">95 points</span>
+                      <span>🏆 1. Haileab (Top Scorer - 3 goals)</span>
+                      <span className="text-primary font-semibold">156 points</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span>2. Sarah Johnson</span>
-                      <span className="text-primary font-semibold">87 points</span>
+                      <span>2. Fiker Tilahun</span>
+                      <span className="text-primary font-semibold">142 points</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span>3. Mike Davis</span>
-                      <span className="text-primary font-semibold">82 points</span>
+                      <span>3. Nahom Feseha</span>
+                      <span className="text-primary font-semibold">138 points</span>
                     </div>
                   </div>
                 </div>
