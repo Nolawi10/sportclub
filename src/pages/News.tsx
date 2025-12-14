@@ -2,7 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Calendar, User } from "lucide-react";
+import { Calendar, User, Trophy, Star } from "lucide-react";
+import playerOfWeekImg from "@/assets/player-of-week.png";
 
 const News = () => {
   const newsArticles = [
@@ -69,6 +70,7 @@ const News = () => {
     "Tournament": "bg-secondary",
     "Program Update": "bg-muted",
     "Club News": "bg-muted",
+    "Player Spotlight": "bg-primary",
   };
 
   return (
@@ -85,6 +87,46 @@ const News = () => {
               Latest updates, match recaps, and announcements
             </p>
           </div>
+
+          {/* Player of the Week Feature */}
+          <Card className="mb-12 hover-lift overflow-hidden gradient-hero border-primary/50">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+              <div className="relative">
+                <img 
+                  src={playerOfWeekImg} 
+                  alt="Player of the Week - Mussie" 
+                  className="w-full h-full object-cover min-h-[300px]"
+                />
+              </div>
+              <div className="p-8 flex flex-col justify-center">
+                <div className="flex items-center gap-2 mb-4">
+                  <Star className="h-6 w-6 text-primary" />
+                  <Badge className="bg-primary text-primary-foreground text-lg px-4 py-1">Player of the Week</Badge>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bebas text-foreground mb-2">
+                  <Trophy className="inline h-8 w-8 text-primary mr-2" />
+                  MUSSIE
+                </h2>
+                <p className="text-xl text-primary font-semibold mb-4">10B F.C</p>
+                <div className="space-y-4 text-muted-foreground">
+                  <p>
+                    When a player performs, you notice it… but when <span className="text-primary font-semibold">Mussie</span> performs? 
+                    <span className="text-foreground"> You feel it across the whole field!</span>
+                  </p>
+                  <p>
+                    This week, he didn't just continue his momentum — he leveled it up. Every touch was composed, 
+                    every decision was sharp, and every moment showed what real leadership looks like.
+                  </p>
+                  <p className="text-lg">
+                    He didn't just repeat his MOTM form… <span className="text-primary font-bold">he expanded it! ✨</span>
+                  </p>
+                  <p className="text-sm italic border-l-4 border-primary pl-4 mt-4">
+                    Huge respect and appreciation — keep shining, keep leading, and keep setting the standard!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Card>
 
           {/* Featured Article */}
           <Card className="mb-12 hover-lift overflow-hidden">
