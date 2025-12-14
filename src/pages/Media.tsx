@@ -1,49 +1,38 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Video, Trophy } from "lucide-react";
+import { Video, Trophy, Youtube, ExternalLink } from "lucide-react";
 
 const Media = () => {
   const interviews = [
     {
       id: "1",
-      title: "Captain's Post-Match Interview - Victory Against Rivals",
-      youtubeId: "dQw4w9WgXcQ",
-      description: "Our captain shares thoughts on the incredible comeback victory",
+      title: "Interviews with 10A and 11A Captains 🔥",
+      youtubeId: "X58uhbCqUmA",
+      description: "Exclusive post-match interviews with the captains of 10A and 11A discussing their strategies and game insights",
     },
     {
       id: "2",
-      title: "Coach's Season Preview - What to Expect This Year",
-      youtubeId: "dQw4w9WgXcQ",
-      description: "Head coach discusses tactics and goals for the new season",
-    },
-    {
-      id: "3",
-      title: "Star Player's Journey - From Rookie to MVP",
-      youtubeId: "dQw4w9WgXcQ",
-      description: "An inspiring story of dedication and perseverance",
+      title: "Interviews with 10B and 9C Captains 🔥",
+      youtubeId: "UGA4F7rEwaY",
+      description: "Hear from the captains of 10B and 9C about their incredible comeback game and team spirit",
     },
   ];
 
   const highlights = [
     {
       id: "1",
-      title: "Top 10 Goals of the Season",
-      youtubeId: "dQw4w9WgXcQ",
-      description: "The most spectacular goals from this season's matches",
+      title: "11A 2-1 10A | One Man's Trash, Another Man's Treasure",
+      youtubeId: "ji0evJ8ctq8",
+      description: "Watch the thrilling match between 11A and 10A with an incredible finish",
     },
     {
       id: "2",
-      title: "Championship Final - Full Match Highlights",
-      youtubeId: "dQw4w9WgXcQ",
-      description: "Relive the thrilling championship victory",
-    },
-    {
-      id: "3",
-      title: "Best Saves & Defensive Plays",
-      youtubeId: "dQw4w9WgXcQ",
-      description: "Outstanding defensive performances and goalkeeper heroics",
+      title: "From Defeat to Glory: Incredible Last-Minute 2–1 Comeback | 10B 2-1 9C",
+      youtubeId: "W-m0Bj53bDA",
+      description: "An unbelievable last-minute comeback that had everyone on their feet!",
     },
   ];
 
@@ -57,9 +46,31 @@ const Media = () => {
             <h1 className="text-5xl md:text-7xl font-bebas text-foreground mb-4">
               Media <span className="text-primary text-glow">Gallery</span>
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-muted-foreground mb-6">
               Interviews, highlights, and exclusive behind-the-scenes content
             </p>
+            
+            {/* YouTube Subscribe Banner */}
+            <Card className="max-w-2xl mx-auto gradient-orange hover-lift">
+              <CardContent className="py-6">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Youtube className="h-12 w-12 text-primary-foreground" />
+                  <div className="text-center sm:text-left">
+                    <h3 className="text-2xl font-bebas text-primary-foreground">Subscribe to Our Channel!</h3>
+                    <p className="text-primary-foreground/80">@sportsclubofssc-s1e</p>
+                  </div>
+                  <a 
+                    href="https://www.youtube.com/@sportsclubofssc-s1e" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="secondary" size="lg" className="font-bebas">
+                      Subscribe <ExternalLink className="ml-2 h-4 w-4" />
+                    </Button>
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           <Tabs defaultValue="highlights" className="w-full">
