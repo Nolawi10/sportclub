@@ -7,37 +7,9 @@ import Footer from "@/components/Footer";
 import heroStadium from "@/assets/hero-stadium.jpg";
 import teamOfWeekImg from "@/assets/team-of-week.png";
 import playerOfWeekImg from "@/assets/player-of-week.png";
-import { BarChart3, Video, Trophy, Calendar, ArrowRight, Target, Star, Users, Youtube, ExternalLink } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { useEffect, useState } from "react";
+import { BarChart3, Video, Trophy, Calendar, ArrowRight, Target, Star, Users, Youtube, ExternalLink, Dribbble } from "lucide-react";
 
 const Index = () => {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    const countDownDate = new Date("Feb 22, 2025 15:00:00").getTime();
-    
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = countDownDate - now;
-      
-      setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000),
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
   const quickStats = [
     { label: "Total Goals", value: "47", icon: Target },
     { label: "Matches Played", value: "16", icon: Trophy },
@@ -62,16 +34,36 @@ const Index = () => {
   ];
 
   const upcomingEvents = [
+    { title: "Basketball Tournament", date: "Dec 17", time: "All Day", sport: "Basketball", badge: "NEW" },
     { title: "11A vs 11C", date: "Feb 22", time: "3:00 PM", sport: "Football Finals", badge: "FINALS" },
     { title: "12B vs 11B", date: "Feb 24", time: "4:00 PM", sport: "Quarterfinals" },
-    { title: "12C vs 12A", date: "Feb 25", time: "3:00 PM", sport: "Semifinals" },
   ];
 
   const recentResults = [
-    { home: "11A", away: "10A", score: "2-1", competition: "Group Stage" },
-    { home: "10B", away: "9C", score: "2-1", competition: "Group Stage" },
-    { home: "12B", away: "9A", score: "6-0", competition: "Group Stage" },
-    { home: "12C", away: "10C", score: "7-1", competition: "Group Stage" },
+    { home: "11B", away: "12A", score: "9-0", competition: "Football" },
+    { home: "11A", away: "10A", score: "2-1", competition: "Football" },
+    { home: "10B", away: "9C", score: "2-1", competition: "Football" },
+    { home: "12B", away: "9A", score: "6-0", competition: "Football" },
+    { home: "12C", away: "10C", score: "7-1", competition: "Football" },
+  ];
+
+  const basketballTeams = [
+    {
+      name: "Team 1",
+      players: ["Natnael (11B)", "Paulos (11B)", "Biruk (9B)", "Lewi (9B)", "Maedot (11B)", "Yonas (9C)", "Frezer (12)"]
+    },
+    {
+      name: "Team 2",
+      players: ["Abel (12C)", "Hailegebreal (11B)", "Abemelek (9B)", "Natnael (10B)", "Yeabasra (12)", "Potus (12)"]
+    },
+    {
+      name: "Team 3",
+      players: ["Natan (12C)", "Elias (12)", "Mitanya (9B)", "Lloyd (12)", "Natan (10A)", "Nettan (12)", "Yibarkeh (9C)"]
+    },
+    {
+      name: "Team 4",
+      players: ["Nolawi (10A)", "Daniel (11A)", "Kibotos (11A)", "Naol (11A)", "Yohanan (11B)", "Barack Biniam (11B)", "Emran (12B)"]
+    }
   ];
 
   return (
@@ -131,30 +123,66 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Finals Countdown */}
+      {/* Basketball Tournament Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <Card className="hover-lift gradient-hero border-primary/50">
-            <CardContent className="pt-12 pb-12 text-center">
-              <Badge className="mb-4 text-lg px-4 py-2 bg-primary">🏆 CHAMPIONSHIP FINALS</Badge>
-              <h2 className="text-4xl md:text-6xl font-bebas text-foreground mb-2">11A vs 11C</h2>
-              <p className="text-xl text-muted-foreground mb-8">February 22, 2025 • 3:00 PM</p>
-              
-              <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
-                {Object.entries(timeLeft).map(([unit, value]) => (
-                  <div key={unit} className="bg-card rounded-lg p-4 border border-primary/30">
-                    <p className="text-4xl md:text-6xl font-bebas text-primary">{value}</p>
-                    <p className="text-sm text-muted-foreground uppercase">{unit}</p>
+          <div className="text-center mb-12">
+            <Badge className="mb-4 text-lg px-4 py-2 bg-orange-500 text-white">🏀 STARTS DEC 17</Badge>
+            <h2 className="text-5xl md:text-6xl font-bebas text-foreground mb-4">
+              Basketball <span className="text-primary">Tournament</span>
+            </h2>
+            <p className="text-xl text-muted-foreground">4 Teams • Mixed Grades • Tuesday Kickoff</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {basketballTeams.map((team, idx) => (
+              <Card key={team.name} className="hover-lift animate-slide-in" style={{ animationDelay: `${idx * 0.1}s` }}>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Dribbble className="h-6 w-6 text-orange-500" />
+                    <h3 className="text-2xl font-bebas text-primary">{team.name}</h3>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  <div className="space-y-1">
+                    {team.players.map((player, i) => (
+                      <p key={i} className="text-sm text-muted-foreground">{player}</p>
+                    ))}
+                  </div>
+                  <Badge className="mt-4" variant="outline">{team.players.length} Players</Badge>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Last 5 Results */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-5xl md:text-6xl font-bebas text-foreground mb-4">
+              Last 5 <span className="text-primary">Results</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 max-w-6xl mx-auto">
+            {recentResults.map((match, idx) => (
+              <Card key={idx} className="hover-lift text-center">
+                <CardContent className="py-6">
+                  <p className="text-xs text-muted-foreground mb-2">{match.competition}</p>
+                  <div className="flex flex-col items-center gap-2">
+                    <span className="font-bebas text-xl">{match.home}</span>
+                    <span className="font-bebas text-3xl text-primary">{match.score}</span>
+                    <span className="font-bebas text-xl">{match.away}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Player & Team of the Week */}
-      <section className="py-16 bg-card">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-5xl md:text-6xl font-bebas text-foreground mb-4">
@@ -197,7 +225,7 @@ const Index = () => {
       </section>
 
       {/* Standings & Top Scorers */}
-      <section className="py-16">
+      <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Mini Standings */}
@@ -263,32 +291,6 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Recent Results */}
-      <section className="py-16 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-5xl md:text-6xl font-bebas text-foreground mb-4">
-              Recent <span className="text-primary">Results</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
-            {recentResults.map((match, idx) => (
-              <Card key={idx} className="hover-lift text-center">
-                <CardContent className="py-6">
-                  <p className="text-xs text-muted-foreground mb-2">{match.competition}</p>
-                  <div className="flex items-center justify-center gap-4">
-                    <span className="font-bebas text-2xl">{match.home}</span>
-                    <span className="font-bebas text-3xl text-primary">{match.score}</span>
-                    <span className="font-bebas text-2xl">{match.away}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
           </div>
         </div>
       </section>

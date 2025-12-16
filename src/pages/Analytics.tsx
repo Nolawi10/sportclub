@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Trophy, Users, Target, ArrowLeft, Star, Vote } from "lucide-react";
+import { Trophy, Users, Target, ArrowLeft, Star, Vote, Shield } from "lucide-react";
 import teamOfWeekImg from "@/assets/team-of-week.png";
 
 interface Team {
@@ -29,12 +29,60 @@ const Analytics = () => {
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [votedPlayer, setVotedPlayer] = useState<string | null>(null);
 
+  // Football team rosters with full lineups
+  const teamRosters = {
+    "12A": {
+      lineup: ["Fikir (C)", "Frezer", "Kidus", "Yabsera", "Ezana", "Yabsera", "Amanuel"],
+      subs: ["Nahom", "Joel", "Ishak"]
+    },
+    "12B": {
+      lineup: ["Abel Melese", "Abel Tadese", "Bemnet Debebe", "Elias Markos", "Godoliyas Tekalgn", "Hamza Sefa", "Imran Kelil", "Merwan Biruk", "Natnael Bekalu", "Solomon Melese"],
+      subs: []
+    },
+    "11A": {
+      lineup: ["Dawit Fasil (C)", "Amanuel Dejene", "Haileab Mulugeta", "Daniel Shimekit", "Natnael Mequanent", "Zereyaecob Abebe", "Hailegebriel Tilaye", "Simone Getachew", "Yohannan Birhane", "Mohammed nur Hamid"],
+      subs: []
+    },
+    "11B": {
+      lineup: ["Daniel Eshetu", "Sami", "Faruk", "Feysel", "Yeabsira D", "Kalid", "Mohammed", "Barack", "Esayas"],
+      subs: []
+    },
+    "11C": {
+      lineup: ["Paulos Berihun (C)", "Nahom Wondifraw", "Abiy Mamo", "Kaleab Mekasha", "Muse Germachew", "Mikiyas Debalkie", "Abemelek Getachew", "Robel Andualem"],
+      subs: []
+    },
+    "10A": {
+      lineup: ["Kaleab Fekadu (GK)", "Olbana Ahmedsiraj (DEF)", "Sofonias Siraw (DEF)", "Kaleb Seifu (DEF)", "Yonathan Aklilu (MID)", "Girum Fikremariam (ST)", "Ezana Zekarias (ST)"],
+      subs: ["Beamlak Tewodros"]
+    },
+    "10B": {
+      lineup: ["Abenezer", "Yeabsira", "Muse", "Shebaw (Nahom)", "Lincoln", "Chris", "Firaol"],
+      subs: ["Abel", "Natan", "Kounde (Yodahe)"]
+    },
+    "10C": {
+      lineup: ["Amen Samuel (GK)", "Estifanos Ayalew (CB)", "Natnael Alemayehu (CB)", "Elias Ahmed (CB)", "Ezra Ambaw (CM)", "Esreal Bewketu (CM)", "Zakir Nuredin (CAM)", "Henok Yared (ST)", "John Samuel (ST)", "Nolawi Hailu (ST)"],
+      subs: []
+    },
+    "9A": {
+      lineup: ["Haleluya (GK)", "Elnatan (CB)", "Nati (CM)", "Adoniyas (CB)", "Yonas (CM)", "Sheferaw (LB)", "Kaleb (CM)", "Aymen (CM)", "Fitsum (LB)", "Aron (RB)", "Moebon (RB)"],
+      subs: []
+    },
+    "9B": {
+      lineup: ["Biruk", "Matanya", "Yonatan", "Yared", "Eyosias", "Leul", "Natan", "Alazar", "Abemelek", "Naol", "Lewi"],
+      subs: []
+    },
+    "9C": {
+      lineup: ["Bamlak (GK)", "Akiya (CB)", "Biruk (CB)", "Abenezer (RB)", "Enqusilase (LB)", "Reyan (CM)", "Dawit (CM)"],
+      subs: ["Nahom", "Legizew", "Leul"]
+    }
+  };
+
   const leagueTable: Team[] = [
     { rank: 1, name: "11A", played: 2, goalDiff: 7, points: 6, wins: 2, draws: 0, losses: 0, goalsFor: 9, goalsAgainst: 2, recentForm: ["W", "W"], players: [{ name: "Haileab", position: "MID", goals: 4, assists: 1 }, { name: "Dawit", position: "FWD", goals: 2, assists: 0 }, { name: "Daniel", position: "MID", goals: 1, assists: 1 }, { name: "Aman", position: "MID", goals: 0, assists: 2 }, { name: "Yohanan", position: "DEF", goals: 0, assists: 0 }], previousMatches: [{ opponent: "10A", result: "W", score: "2-1" }, { opponent: "9B", result: "W", score: "4-0" }], upcomingFixtures: [{ opponent: "11C", date: "Feb 22", competition: "Finals" }] },
-    { rank: 2, name: "12C", played: 1, goalDiff: 6, points: 3, wins: 1, draws: 0, losses: 0, goalsFor: 7, goalsAgainst: 1, recentForm: ["W"], players: [{ name: "Samson", position: "FWD", goals: 3, assists: 0 }, { name: "Abraham", position: "MID", goals: 1, assists: 2 }, { name: "Abdela", position: "FWD", goals: 2, assists: 0 }, { name: "Estifanos", position: "MID", goals: 0, assists: 1 }], previousMatches: [{ opponent: "10C", result: "W", score: "7-1" }], upcomingFixtures: [{ opponent: "12A", date: "Feb 25", competition: "Semifinals" }] },
-    { rank: 2, name: "12B", played: 1, goalDiff: 6, points: 3, wins: 1, draws: 0, losses: 0, goalsFor: 6, goalsAgainst: 0, recentForm: ["W"], players: [{ name: "Elias", position: "FWD", goals: 3, assists: 0 }, { name: "Abel", position: "MID", goals: 1, assists: 3 }, { name: "Bemnet", position: "MID", goals: 1, assists: 1 }, { name: "Godolias", position: "FWD", goals: 1, assists: 0 }], previousMatches: [{ opponent: "9A", result: "W", score: "6-0" }], upcomingFixtures: [{ opponent: "11B", date: "Feb 24", competition: "Quarterfinals" }] },
-    { rank: 4, name: "12A", played: 1, goalDiff: 2, points: 3, wins: 1, draws: 0, losses: 0, goalsFor: 3, goalsAgainst: 1, recentForm: ["W"], players: [{ name: "Fiker", position: "FWD", goals: 2, assists: 0 }, { name: "Nahom", position: "MID", goals: 1, assists: 1 }, { name: "Kidus", position: "MID", goals: 0, assists: 1 }, { name: "Yeabsira", position: "FWD", goals: 1, assists: 0 }], previousMatches: [{ opponent: "11C", result: "W", score: "3-1" }], upcomingFixtures: [{ opponent: "12C", date: "Feb 25", competition: "Semifinals" }] },
-    { rank: 4, name: "11B", played: 1, goalDiff: 2, points: 3, wins: 1, draws: 0, losses: 0, goalsFor: 3, goalsAgainst: 1, recentForm: ["W"], players: [{ name: "Faruk", position: "MID", goals: 1, assists: 1 }, { name: "Samuel", position: "MID", goals: 1, assists: 1 }, { name: "Daniel", position: "FWD", goals: 1, assists: 0 }, { name: "Esayas", position: "FWD", goals: 1, assists: 0 }], previousMatches: [{ opponent: "10B", result: "W", score: "3-1" }], upcomingFixtures: [{ opponent: "12B", date: "Feb 24", competition: "Quarterfinals" }] },
+    { rank: 2, name: "11B", played: 2, goalDiff: 8, points: 6, wins: 2, draws: 0, losses: 0, goalsFor: 12, goalsAgainst: 4, recentForm: ["W", "W"], players: [{ name: "Faruk", position: "MID", goals: 3, assists: 1 }, { name: "Daniel", position: "FWD", goals: 4, assists: 0 }, { name: "Sami", position: "MID", goals: 2, assists: 2 }, { name: "Esayas", position: "FWD", goals: 3, assists: 0 }], previousMatches: [{ opponent: "12A", result: "W", score: "9-0" }, { opponent: "10B", result: "W", score: "3-1" }], upcomingFixtures: [{ opponent: "12B", date: "Feb 24", competition: "Quarterfinals" }] },
+    { rank: 3, name: "12C", played: 1, goalDiff: 6, points: 3, wins: 1, draws: 0, losses: 0, goalsFor: 7, goalsAgainst: 1, recentForm: ["W"], players: [{ name: "Samson", position: "FWD", goals: 3, assists: 0 }, { name: "Abraham", position: "MID", goals: 1, assists: 2 }, { name: "Abdela", position: "FWD", goals: 2, assists: 0 }, { name: "Estifanos", position: "MID", goals: 0, assists: 1 }], previousMatches: [{ opponent: "10C", result: "W", score: "7-1" }], upcomingFixtures: [{ opponent: "12A", date: "Feb 25", competition: "Semifinals" }] },
+    { rank: 4, name: "12B", played: 1, goalDiff: 6, points: 3, wins: 1, draws: 0, losses: 0, goalsFor: 6, goalsAgainst: 0, recentForm: ["W"], players: [{ name: "Elias", position: "FWD", goals: 3, assists: 0 }, { name: "Abel", position: "MID", goals: 1, assists: 3 }, { name: "Bemnet", position: "MID", goals: 1, assists: 1 }, { name: "Godolias", position: "FWD", goals: 1, assists: 0 }], previousMatches: [{ opponent: "9A", result: "W", score: "6-0" }], upcomingFixtures: [{ opponent: "11B", date: "Feb 24", competition: "Quarterfinals" }] },
+    { rank: 5, name: "12A", played: 2, goalDiff: -6, points: 3, wins: 1, draws: 0, losses: 1, goalsFor: 3, goalsAgainst: 9, recentForm: ["W", "L"], players: [{ name: "Fiker", position: "FWD", goals: 2, assists: 0 }, { name: "Nahom", position: "MID", goals: 1, assists: 1 }, { name: "Kidus", position: "MID", goals: 0, assists: 1 }, { name: "Yeabsira", position: "FWD", goals: 0, assists: 0 }], previousMatches: [{ opponent: "11C", result: "W", score: "3-1" }, { opponent: "11B", result: "L", score: "0-9" }], upcomingFixtures: [{ opponent: "12C", date: "Feb 25", competition: "Semifinals" }] },
     { rank: 6, name: "9B", played: 2, goalDiff: 1, points: 3, wins: 1, draws: 0, losses: 1, goalsFor: 4, goalsAgainst: 3, recentForm: ["W", "L"], players: [{ name: "Lewi", position: "FWD", goals: 2, assists: 1 }, { name: "Yared", position: "DEF", goals: 0, assists: 0 }, { name: "Naol", position: "MID", goals: 1, assists: 0 }], previousMatches: [{ opponent: "9C", result: "W", score: "2-1" }, { opponent: "11A", result: "L", score: "0-4" }], upcomingFixtures: [{ opponent: "10A", date: "Feb 26", competition: "Group Stage" }] },
     { rank: 7, name: "10B", played: 2, goalDiff: -1, points: 3, wins: 1, draws: 0, losses: 1, goalsFor: 3, goalsAgainst: 4, recentForm: ["W", "L"], players: [{ name: "Musse", position: "MID", goals: 3, assists: 0 }, { name: "Abenezer", position: "MID", goals: 1, assists: 3 }, { name: "Yeabsira", position: "FWD", goals: 1, assists: 0 }, { name: "Lincon", position: "FWD", goals: 0, assists: 1 }], previousMatches: [{ opponent: "9C", result: "W", score: "2-1" }, { opponent: "11B", result: "L", score: "1-3" }], upcomingFixtures: [{ opponent: "10C", date: "Feb 27", competition: "Group Stage" }] },
     { rank: 8, name: "11C", played: 1, goalDiff: 0, points: 1, wins: 0, draws: 1, losses: 0, goalsFor: 1, goalsAgainst: 1, recentForm: ["D"], players: [{ name: "Nahom", position: "MID", goals: 1, assists: 0 }, { name: "Musse", position: "FWD", goals: 1, assists: 0 }, { name: "Kaleab", position: "GK", goals: 0, assists: 1 }], previousMatches: [{ opponent: "10A", result: "D", score: "1-1" }], upcomingFixtures: [{ opponent: "11A", date: "Feb 22", competition: "Finals" }] },
@@ -46,15 +94,15 @@ const Analytics = () => {
 
   const topScorers = [
     { rank: 1, name: "Haileab", team: "11A", goals: 4 },
-    { rank: 2, name: "Samson", team: "12C", goals: 3 },
-    { rank: 3, name: "Elias", team: "12B", goals: 3 },
-    { rank: 4, name: "Musse", team: "10B", goals: 3 },
-    { rank: 5, name: "Dawit", team: "11A", goals: 2 },
-    { rank: 6, name: "Dawit", team: "9C", goals: 2 },
-    { rank: 7, name: "Fiker", team: "12A", goals: 2 },
-    { rank: 8, name: "Abdela", team: "12C", goals: 2 },
-    { rank: 9, name: "Lewi", team: "9B", goals: 2 },
-    { rank: 10, name: "Nahom", team: "11C", goals: 1 },
+    { rank: 2, name: "Daniel", team: "11B", goals: 4 },
+    { rank: 3, name: "Samson", team: "12C", goals: 3 },
+    { rank: 4, name: "Elias", team: "12B", goals: 3 },
+    { rank: 5, name: "Musse", team: "10B", goals: 3 },
+    { rank: 6, name: "Faruk", team: "11B", goals: 3 },
+    { rank: 7, name: "Esayas", team: "11B", goals: 3 },
+    { rank: 8, name: "Dawit", team: "11A", goals: 2 },
+    { rank: 9, name: "Dawit", team: "9C", goals: 2 },
+    { rank: 10, name: "Fiker", team: "12A", goals: 2 },
   ];
 
   const topAssistors = [
@@ -62,12 +110,12 @@ const Analytics = () => {
     { rank: 2, name: "Abenezer", team: "10B", assists: 3 },
     { rank: 3, name: "Aman", team: "11A", assists: 2 },
     { rank: 4, name: "Abraham", team: "12C", assists: 2 },
-    { rank: 5, name: "Reyan", team: "9C", assists: 1 },
-    { rank: 6, name: "Nahom", team: "12A", assists: 1 },
-    { rank: 7, name: "Kidus", team: "12A", assists: 1 },
-    { rank: 8, name: "Bemnet", team: "12B", assists: 1 },
-    { rank: 9, name: "Estifanos", team: "12C", assists: 1 },
-    { rank: 10, name: "Faruk", team: "11B", assists: 1 },
+    { rank: 5, name: "Sami", team: "11B", assists: 2 },
+    { rank: 6, name: "Reyan", team: "9C", assists: 1 },
+    { rank: 7, name: "Nahom", team: "12A", assists: 1 },
+    { rank: 8, name: "Kidus", team: "12A", assists: 1 },
+    { rank: 9, name: "Bemnet", team: "12B", assists: 1 },
+    { rank: 10, name: "Estifanos", team: "12C", assists: 1 },
   ];
 
   const teamOfTheWeek = {
@@ -250,11 +298,12 @@ const Analytics = () => {
           </div>
 
           <Tabs defaultValue="standings" className="w-full">
-            <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 mb-8">
+            <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-5 mb-8">
               <TabsTrigger value="standings" className="font-bebas">Standings</TabsTrigger>
-              <TabsTrigger value="scorers" className="font-bebas">Top Scorers</TabsTrigger>
-              <TabsTrigger value="assists" className="font-bebas">Top Assists</TabsTrigger>
-              <TabsTrigger value="totw" className="font-bebas">Team of Week</TabsTrigger>
+              <TabsTrigger value="rosters" className="font-bebas">Rosters</TabsTrigger>
+              <TabsTrigger value="scorers" className="font-bebas">Scorers</TabsTrigger>
+              <TabsTrigger value="assists" className="font-bebas">Assists</TabsTrigger>
+              <TabsTrigger value="totw" className="font-bebas">TOTW</TabsTrigger>
             </TabsList>
 
             <TabsContent value="standings">
@@ -312,6 +361,45 @@ const Analytics = () => {
                   </div>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="rosters">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Object.entries(teamRosters).map(([teamName, roster]) => (
+                  <Card key={teamName} className="hover-lift">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-2xl font-bebas flex items-center gap-2">
+                        <Shield className="h-5 w-5 text-primary" />
+                        {teamName}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-primary">Lineup</h4>
+                        <div className="flex flex-wrap gap-1">
+                          {roster.lineup.map((player, idx) => (
+                            <Badge key={idx} variant="secondary" className="text-xs">
+                              {player}
+                            </Badge>
+                          ))}
+                        </div>
+                        {roster.subs.length > 0 && (
+                          <>
+                            <h4 className="text-sm font-semibold text-muted-foreground mt-3">Subs</h4>
+                            <div className="flex flex-wrap gap-1">
+                              {roster.subs.map((player, idx) => (
+                                <Badge key={idx} variant="outline" className="text-xs">
+                                  {player}
+                                </Badge>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </TabsContent>
 
             <TabsContent value="scorers">
