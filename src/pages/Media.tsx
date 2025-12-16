@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,14 @@ import Footer from "@/components/Footer";
 import { Video, Trophy, Youtube, ExternalLink, Play, Clock, Eye } from "lucide-react";
 
 const Media = () => {
+  const recentResults = [
+    { home: "11B", away: "12A", score: "9-0" },
+    { home: "11A", away: "10A", score: "2-1" },
+    { home: "10B", away: "9C", score: "2-1" },
+    { home: "12B", away: "9A", score: "6-0" },
+    { home: "12C", away: "10C", score: "7-1" },
+  ];
+
   const highlights = [
     {
       id: "1",
@@ -28,27 +36,27 @@ const Media = () => {
     },
     {
       id: "3",
-      title: "12A vs 11B | The Derby Showdown",
+      title: "11B 9-0 12A | Complete Domination",
       youtubeId: "ji0evJ8ctq8",
-      description: "Grade 12A faces off against 11B in an intense derby clash",
-      views: "756",
+      description: "11B delivers a stunning 9-0 victory against 12A",
+      views: "2.3K",
       uploadedAt: "1 day ago",
       duration: "9:15",
     },
     {
       id: "4",
-      title: "9A 3-0 9B | Freshmen Football Finals",
+      title: "12B 6-0 9A | Senior Power Display",
       youtubeId: "W-m0Bj53bDA",
-      description: "Grade 9A dominates in the freshman championship match",
+      description: "12B shows their dominance with a commanding 6-0 win",
       views: "645",
       uploadedAt: "1 day ago",
       duration: "6:48",
     },
     {
       id: "5",
-      title: "12C vs 10C | Battle of the C Sections",
+      title: "12C vs 10C | 7-1 Goal Fest",
       youtubeId: "ji0evJ8ctq8",
-      description: "Exciting match between the C sections from different grades",
+      description: "12C puts 7 past 10C in an incredible goal-scoring display",
       views: "534",
       uploadedAt: "2 days ago",
       duration: "8:12",
@@ -139,7 +147,7 @@ const Media = () => {
     },
     {
       id: "5",
-      title: "12A Captain on Leading His Team",
+      title: "12A Captain Fikir on Leading His Team",
       youtubeId: "X58uhbCqUmA",
       description: "The Grade 12A captain shares his leadership experience",
       views: "445",
@@ -274,6 +282,24 @@ const Media = () => {
                 </div>
               </CardContent>
             </Card>
+          </div>
+
+          {/* Last 5 Results */}
+          <div className="mb-12">
+            <h2 className="text-3xl font-bebas text-center mb-6">Last 5 <span className="text-primary">Results</span></h2>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-4xl mx-auto">
+              {recentResults.map((match, idx) => (
+                <Card key={idx} className="text-center hover-lift">
+                  <CardContent className="py-4">
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="font-bebas text-lg">{match.home}</span>
+                      <span className="font-bebas text-2xl text-primary">{match.score}</span>
+                      <span className="font-bebas text-lg">{match.away}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
 
           {/* Stats Bar */}

@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,11 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { 
-  Settings, Video, Users, Trophy, Calendar, Plus, Trash2, Save, 
-  Youtube, FileText, Shield, Award, Edit, ArrowLeft
+  Video, Users, Trophy, Calendar, Plus, Trash2,
+  Youtube, FileText, Shield, Award, Lock
 } from "lucide-react";
 
 interface MediaItem {
@@ -42,9 +40,12 @@ interface MatchItem {
 }
 
 const Admin = () => {
-  const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("admin_logged_in") === "true";
+  });
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   
   // Media Management
   const [mediaItems, setMediaItems] = useState<MediaItem[]>(() => {
@@ -95,23 +96,71 @@ const Admin = () => {
     return stored ? JSON.parse(stored) : { players: "", subs: "", description: "" };
   });
 
-  // Redirect if not admin
-  useEffect(() => {
-    if (!isAuthenticated || !user?.isAdmin) {
-      navigate("/auth");
+  const handleLogin = () => {
+    if (username === "Nolawi" && password === "@Nolawi2010") {
+      setIsLoggedIn(true);
+      localStorage.setItem("admin_logged_in", "true");
+      toast({ title: "Welcome back!", description: "You are now logged in as admin." });
+    } else {
+      toast({ title: "Invalid credentials", description: "Please check your username and password.", variant: "destructive" });
     }
-  }, [isAuthenticated, user, navigate]);
+  };
 
-  if (!isAuthenticated || !user?.isAdmin) {
-    return null;
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("admin_logged_in");
+    toast({ title: "Logged out", description: "You have been logged out." });
+  };
+
+  // If not logged in, show login form
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main className="pt-32 pb-12">
+          <div className="container mx-auto px-4 max-w-md">
+            <Card className="hover-lift">
+              <CardHeader className="text-center">
+                <div className="w-20 h-20 rounded-full gradient-orange flex items-center justify-center mx-auto mb-4">
+                  <Lock className="h-10 w-10 text-primary-foreground" />
+                </div>
+                <CardTitle className="text-3xl font-bebas">
+                  Admin <span className="text-primary">Login</span>
+                </CardTitle>
+                <CardDescription>Enter your credentials to access the dashboard</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Username</Label>
+                  <Input
+                    placeholder="Enter username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Password</Label>
+                  <Input
+                    type="password"
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                  />
+                </div>
+                <Button onClick={handleLogin} className="w-full gradient-orange text-primary-foreground">
+                  Login
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   // Save functions
-  const saveMedia = () => {
-    localStorage.setItem("ssc_media", JSON.stringify(mediaItems));
-    toast({ title: "Media saved!", description: "Media items have been updated." });
-  };
-
   const addMedia = () => {
     if (!newMedia.title || !newMedia.url) {
       toast({ title: "Error", description: "Please fill in all fields.", variant: "destructive" });
@@ -209,10 +258,7 @@ const Admin = () => {
       
       <main className="pt-32 pb-12">
         <div className="container mx-auto px-4">
-          <div className="flex items-center gap-4 mb-8">
-            <Button variant="ghost" onClick={() => navigate("/")}>
-              <ArrowLeft className="h-4 w-4 mr-2" /> Back
-            </Button>
+          <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-4xl md:text-5xl font-bebas text-foreground">
                 <Shield className="inline h-10 w-10 text-primary mr-2" />
@@ -220,6 +266,9 @@ const Admin = () => {
               </h1>
               <p className="text-muted-foreground">Manage all content and settings</p>
             </div>
+            <Button variant="outline" onClick={handleLogout}>
+              Logout
+            </Button>
           </div>
 
           <Tabs defaultValue="media" className="w-full">
@@ -236,8 +285,8 @@ const Admin = () => {
               <TabsTrigger value="awards" className="font-bebas">
                 <Award className="h-4 w-4 mr-2" /> Awards
               </TabsTrigger>
-              <TabsTrigger value="users" className="font-bebas">
-                <Users className="h-4 w-4 mr-2" /> Users
+              <TabsTrigger value="teams" className="font-bebas">
+                <Users className="h-4 w-4 mr-2" /> Teams
               </TabsTrigger>
             </TabsList>
 
@@ -471,7 +520,6 @@ const Admin = () => {
                             <SelectItem value="Football">Football</SelectItem>
                             <SelectItem value="Basketball">Basketball</SelectItem>
                             <SelectItem value="Volleyball">Volleyball</SelectItem>
-                            <SelectItem value="Chess">Chess</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -492,7 +540,7 @@ const Admin = () => {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className="font-bebas">Upcoming Matches ({matches.length})</CardTitle>
+                    <CardTitle className="font-bebas">Scheduled Matches ({matches.length})</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2 max-h-[400px] overflow-y-auto">
@@ -508,7 +556,7 @@ const Admin = () => {
                         </div>
                       ))}
                       {matches.length === 0 && (
-                        <p className="text-center text-muted-foreground py-8">No matches yet</p>
+                        <p className="text-center text-muted-foreground py-8">No matches scheduled</p>
                       )}
                     </div>
                   </CardContent>
@@ -527,43 +575,40 @@ const Admin = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label>Player Name</Label>
-                        <Input
-                          placeholder="Mussie"
-                          value={playerOfWeek.name}
-                          onChange={(e) => setPlayerOfWeek({...playerOfWeek, name: e.target.value})}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Team</Label>
-                        <Select 
-                          value={playerOfWeek.team} 
-                          onValueChange={(v) => setPlayerOfWeek({...playerOfWeek, team: v})}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select team" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {teams.map(team => (
-                              <SelectItem key={team} value={team}>{team}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+                    <div className="space-y-2">
+                      <Label>Player Name</Label>
+                      <Input
+                        placeholder="Mussie"
+                        value={playerOfWeek.name}
+                        onChange={(e) => setPlayerOfWeek({...playerOfWeek, name: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Team</Label>
+                      <Select 
+                        value={playerOfWeek.team} 
+                        onValueChange={(v) => setPlayerOfWeek({...playerOfWeek, team: v})}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select team" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {teams.map(team => (
+                            <SelectItem key={team} value={team}>{team}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="space-y-2">
                       <Label>Description</Label>
                       <Textarea
-                        placeholder="This week, he didn't just continue his momentum..."
+                        placeholder="Outstanding performance with..."
                         value={playerOfWeek.description}
                         onChange={(e) => setPlayerOfWeek({...playerOfWeek, description: e.target.value})}
-                        rows={4}
                       />
                     </div>
                     <Button onClick={savePlayerOfWeek} className="w-full">
-                      <Save className="h-4 w-4 mr-2" /> Save Player of the Week
+                      Save Player of the Week
                     </Button>
                   </CardContent>
                 </Card>
@@ -577,18 +622,17 @@ const Admin = () => {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
-                      <Label>Starting Players (comma separated)</Label>
+                      <Label>Starting XI</Label>
                       <Textarea
-                        placeholder="GK: Kaleab, DEF: Yohanan, Yared, MID: Reyan, Mussie, FWD: Haileab, Lewi"
+                        placeholder="Kaleab (GK), Yohanan, Yared (DEF)..."
                         value={teamOfWeek.players}
                         onChange={(e) => setTeamOfWeek({...teamOfWeek, players: e.target.value})}
-                        rows={3}
                       />
                     </div>
                     <div className="space-y-2">
                       <Label>Substitutes</Label>
-                      <Input
-                        placeholder="ST: Girum, CAM: Naol, CB: Biruk, GK: Bamlak"
+                      <Textarea
+                        placeholder="Player 1, Player 2..."
                         value={teamOfWeek.subs}
                         onChange={(e) => setTeamOfWeek({...teamOfWeek, subs: e.target.value})}
                       />
@@ -596,45 +640,30 @@ const Admin = () => {
                     <div className="space-y-2">
                       <Label>Description</Label>
                       <Textarea
-                        placeholder="Another week, another show from these great players..."
+                        placeholder="Week 3 standout performers..."
                         value={teamOfWeek.description}
                         onChange={(e) => setTeamOfWeek({...teamOfWeek, description: e.target.value})}
-                        rows={3}
                       />
                     </div>
                     <Button onClick={saveTeamOfWeek} className="w-full">
-                      <Save className="h-4 w-4 mr-2" /> Save Team of the Week
+                      Save Team of the Week
                     </Button>
                   </CardContent>
                 </Card>
               </div>
             </TabsContent>
 
-            {/* Users Management */}
-            <TabsContent value="users">
+            {/* Teams Info */}
+            <TabsContent value="teams">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-bebas flex items-center gap-2">
-                    <Users className="h-5 w-5 text-primary" />
-                    Registered Users
-                  </CardTitle>
-                  <CardDescription>View all registered users</CardDescription>
+                  <CardTitle className="font-bebas">Team Rosters Info</CardTitle>
+                  <CardDescription>View all team rosters - edit in Analytics page data</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    {JSON.parse(localStorage.getItem("ssc_users") || "[]").map((user: any, index: number) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                        <div>
-                          <p className="font-medium">{user.name}</p>
-                          <p className="text-sm text-muted-foreground">{user.email}</p>
-                        </div>
-                        <span className="text-xs text-muted-foreground">ID: {user.id}</span>
-                      </div>
-                    ))}
-                    {JSON.parse(localStorage.getItem("ssc_users") || "[]").length === 0 && (
-                      <p className="text-center text-muted-foreground py-8">No registered users yet</p>
-                    )}
-                  </div>
+                  <p className="text-muted-foreground">
+                    Team rosters are managed in the codebase. Contact the developer to update team lineups.
+                  </p>
                 </CardContent>
               </Card>
             </TabsContent>
