@@ -60,36 +60,108 @@ const Club = () => {
   ]);
 
   const allPlayers: Player[] = [
-    // Goalkeepers - Higher prices
-    { id: "gk1", name: "Kaleab", team: "11A", position: "GK", price: 8.5, points: 42, form: 7.2, goals: 0, assists: 0, cleanSheets: 4, selected: false },
-    { id: "gk2", name: "Bamlak", team: "10B", position: "GK", price: 7.0, points: 35, form: 6.1, goals: 0, assists: 0, cleanSheets: 3, selected: false },
-    { id: "gk3", name: "Tewodros", team: "12A", position: "GK", price: 7.5, points: 38, form: 6.5, goals: 0, assists: 0, cleanSheets: 3, selected: false },
-    { id: "gk4", name: "Henok", team: "9A", position: "GK", price: 6.0, points: 28, form: 5.8, goals: 0, assists: 0, cleanSheets: 2, selected: false },
+    // Goalkeepers
+    { id: "gk1", name: "Kaleab Fekadu", team: "10A", position: "GK", price: 8.5, points: 42, form: 7.2, goals: 0, assists: 0, cleanSheets: 4, selected: false },
+    { id: "gk2", name: "Bamlak", team: "9C", position: "GK", price: 7.0, points: 35, form: 6.1, goals: 0, assists: 0, cleanSheets: 3, selected: false },
+    { id: "gk3", name: "Haleluya", team: "9A", position: "GK", price: 6.0, points: 28, form: 5.8, goals: 0, assists: 0, cleanSheets: 2, selected: false },
+    { id: "gk4", name: "Amen Samuel", team: "10C", position: "GK", price: 6.5, points: 30, form: 5.5, goals: 0, assists: 0, cleanSheets: 2, selected: false },
     
-    // Defenders - Higher prices
-    { id: "def1", name: "Yohanan", team: "11A", position: "DEF", price: 9.0, points: 48, form: 7.5, goals: 2, assists: 1, cleanSheets: 4, selected: false },
-    { id: "def2", name: "Yared", team: "10B", position: "DEF", price: 8.5, points: 44, form: 7.0, goals: 1, assists: 2, cleanSheets: 3, selected: false },
-    { id: "def3", name: "Biruk", team: "12A", position: "DEF", price: 7.5, points: 36, form: 6.2, goals: 0, assists: 1, cleanSheets: 3, selected: false },
-    { id: "def4", name: "Dawit", team: "11B", position: "DEF", price: 6.5, points: 32, form: 5.9, goals: 1, assists: 0, cleanSheets: 2, selected: false },
-    { id: "def5", name: "Eyob", team: "10A", position: "DEF", price: 7.0, points: 35, form: 6.0, goals: 0, assists: 2, cleanSheets: 3, selected: false },
-    { id: "def6", name: "Solomon", team: "9B", position: "DEF", price: 5.5, points: 25, form: 5.5, goals: 0, assists: 0, cleanSheets: 2, selected: false },
+    // Defenders - 12A
+    { id: "def1", name: "Fikir", team: "12A", position: "DEF", price: 8.0, points: 40, form: 6.8, goals: 2, assists: 0, cleanSheets: 2, selected: false },
+    { id: "def2", name: "Kidus", team: "12A", position: "DEF", price: 6.5, points: 32, form: 6.0, goals: 0, assists: 1, cleanSheets: 2, selected: false },
+    // 12B
+    { id: "def3", name: "Abel Melese", team: "12B", position: "DEF", price: 7.5, points: 38, form: 6.5, goals: 1, assists: 3, cleanSheets: 3, selected: false },
+    { id: "def4", name: "Bemnet Debebe", team: "12B", position: "DEF", price: 7.0, points: 35, form: 6.2, goals: 1, assists: 1, cleanSheets: 3, selected: false },
+    // 11A
+    { id: "def5", name: "Yohannan Birhane", team: "11A", position: "DEF", price: 8.5, points: 45, form: 7.2, goals: 0, assists: 0, cleanSheets: 4, selected: false },
+    { id: "def6", name: "Zereyaecob Abebe", team: "11A", position: "DEF", price: 7.0, points: 36, form: 6.5, goals: 0, assists: 1, cleanSheets: 3, selected: false },
+    // 9A
+    { id: "def7", name: "Elnatan", team: "9A", position: "DEF", price: 5.5, points: 25, form: 5.5, goals: 0, assists: 0, cleanSheets: 1, selected: false },
+    { id: "def8", name: "Adoniyas", team: "9A", position: "DEF", price: 5.5, points: 24, form: 5.4, goals: 0, assists: 0, cleanSheets: 1, selected: false },
+    // 9C
+    { id: "def9", name: "Akiya", team: "9C", position: "DEF", price: 6.0, points: 28, form: 5.8, goals: 0, assists: 1, cleanSheets: 2, selected: false },
+    { id: "def10", name: "Biruk", team: "9C", position: "DEF", price: 6.0, points: 27, form: 5.7, goals: 0, assists: 0, cleanSheets: 2, selected: false },
+    // 10A
+    { id: "def11", name: "Olbana Ahmedsiraj", team: "10A", position: "DEF", price: 6.5, points: 30, form: 6.0, goals: 0, assists: 0, cleanSheets: 2, selected: false },
+    { id: "def12", name: "Sofonias Siraw", team: "10A", position: "DEF", price: 6.5, points: 29, form: 5.9, goals: 0, assists: 0, cleanSheets: 2, selected: false },
+    { id: "def13", name: "Kaleb Seifu", team: "10A", position: "DEF", price: 6.0, points: 28, form: 5.8, goals: 0, assists: 1, cleanSheets: 2, selected: false },
+    // 10C
+    { id: "def14", name: "Estifanos Ayalew", team: "10C", position: "DEF", price: 5.5, points: 22, form: 5.2, goals: 0, assists: 0, cleanSheets: 1, selected: false },
+    { id: "def15", name: "Natnael Alemayehu", team: "10C", position: "DEF", price: 5.5, points: 21, form: 5.1, goals: 0, assists: 0, cleanSheets: 1, selected: false },
+    { id: "def16", name: "Elias Ahmed", team: "10C", position: "DEF", price: 5.5, points: 20, form: 5.0, goals: 0, assists: 0, cleanSheets: 1, selected: false },
+    // 9B
+    { id: "def17", name: "Yared", team: "9B", position: "DEF", price: 7.0, points: 35, form: 6.5, goals: 0, assists: 0, cleanSheets: 3, selected: false },
     
-    // Midfielders - Premium prices
-    { id: "mid1", name: "Mussie", team: "10B", position: "MID", price: 12.5, points: 78, form: 9.2, goals: 5, assists: 8, selected: false },
-    { id: "mid2", name: "Reyan", team: "11A", position: "MID", price: 11.0, points: 65, form: 8.1, goals: 3, assists: 6, selected: false },
-    { id: "mid3", name: "Naol", team: "10A", position: "MID", price: 9.5, points: 52, form: 7.3, goals: 4, assists: 3, selected: false },
-    { id: "mid4", name: "Bereket", team: "12A", position: "MID", price: 9.0, points: 48, form: 6.8, goals: 2, assists: 4, selected: false },
-    { id: "mid5", name: "Yonas", team: "11B", position: "MID", price: 8.0, points: 42, form: 6.5, goals: 3, assists: 2, selected: false },
-    { id: "mid6", name: "Mikias", team: "9A", position: "MID", price: 6.5, points: 35, form: 6.0, goals: 2, assists: 2, selected: false },
-    { id: "mid7", name: "Nahom", team: "10C", position: "MID", price: 7.5, points: 40, form: 6.3, goals: 2, assists: 3, selected: false },
+    // Midfielders - 12C
+    { id: "mid1", name: "Abraham", team: "12C", position: "MID", price: 10.5, points: 62, form: 8.0, goals: 3, assists: 2, selected: false },
+    { id: "mid2", name: "Emran", team: "12C", position: "MID", price: 10.0, points: 58, form: 7.8, goals: 0, assists: 3, selected: false },
+    // 11A
+    { id: "mid3", name: "Haileab Mulugeta", team: "11A", position: "MID", price: 13.0, points: 82, form: 9.2, goals: 4, assists: 1, selected: false },
+    { id: "mid4", name: "Daniel Shimekit", team: "11A", position: "MID", price: 9.5, points: 52, form: 7.2, goals: 1, assists: 1, selected: false },
+    { id: "mid5", name: "Natnael Mequanent", team: "11A", position: "MID", price: 8.0, points: 42, form: 6.8, goals: 0, assists: 2, selected: false },
+    // 11B
+    { id: "mid6", name: "Sami", team: "11B", position: "MID", price: 9.0, points: 50, form: 7.5, goals: 2, assists: 2, selected: false },
+    { id: "mid7", name: "Faruk", team: "11B", position: "MID", price: 10.5, points: 60, form: 8.2, goals: 3, assists: 1, selected: false },
+    { id: "mid8", name: "Mohammed", team: "11B", position: "MID", price: 7.5, points: 38, form: 6.3, goals: 0, assists: 1, selected: false },
+    { id: "mid9", name: "Barack", team: "11B", position: "MID", price: 7.0, points: 35, form: 6.0, goals: 0, assists: 1, selected: false },
+    // 10B
+    { id: "mid10", name: "Muse", team: "10B", position: "MID", price: 11.0, points: 68, form: 8.5, goals: 3, assists: 0, selected: false },
+    { id: "mid11", name: "Abenezer", team: "10B", position: "MID", price: 10.0, points: 55, form: 7.8, goals: 1, assists: 3, selected: false },
+    { id: "mid12", name: "Lincoln", team: "10B", position: "MID", price: 7.5, points: 38, form: 6.5, goals: 0, assists: 1, selected: false },
+    // 9C
+    { id: "mid13", name: "Reyan", team: "9C", position: "MID", price: 9.0, points: 48, form: 7.0, goals: 1, assists: 1, selected: false },
+    { id: "mid14", name: "Dawit", team: "9C", position: "MID", price: 8.5, points: 45, form: 6.8, goals: 2, assists: 0, selected: false },
+    // 10A
+    { id: "mid15", name: "Yonathan Aklilu", team: "10A", position: "MID", price: 7.5, points: 38, form: 6.2, goals: 0, assists: 1, selected: false },
+    // 10C
+    { id: "mid16", name: "Ezra Ambaw", team: "10C", position: "MID", price: 6.0, points: 28, form: 5.5, goals: 0, assists: 0, selected: false },
+    { id: "mid17", name: "Esreal Bewketu", team: "10C", position: "MID", price: 6.0, points: 26, form: 5.3, goals: 0, assists: 0, selected: false },
+    { id: "mid18", name: "Zakir Nuredin", team: "10C", position: "MID", price: 6.5, points: 30, form: 5.8, goals: 0, assists: 1, selected: false },
+    // 9A
+    { id: "mid19", name: "Nati", team: "9A", position: "MID", price: 5.5, points: 22, form: 5.0, goals: 0, assists: 0, selected: false },
+    { id: "mid20", name: "Yonas", team: "9A", position: "MID", price: 5.5, points: 21, form: 4.9, goals: 0, assists: 0, selected: false },
+    { id: "mid21", name: "Kaleb", team: "9A", position: "MID", price: 5.5, points: 20, form: 4.8, goals: 0, assists: 0, selected: false },
+    // 9B
+    { id: "mid22", name: "Naol", team: "9B", position: "MID", price: 7.5, points: 38, form: 6.5, goals: 1, assists: 0, selected: false },
+    { id: "mid23", name: "Matanya", team: "9B", position: "MID", price: 6.0, points: 28, form: 5.5, goals: 0, assists: 0, selected: false },
+    // 11C
+    { id: "mid24", name: "Nahom Wondifraw", team: "11C", position: "MID", price: 8.0, points: 42, form: 6.8, goals: 1, assists: 0, selected: false },
+    { id: "mid25", name: "Muse Germachew", team: "11C", position: "MID", price: 7.5, points: 40, form: 6.5, goals: 1, assists: 0, selected: false },
+    { id: "mid26", name: "Kaleab Mekasha", team: "11C", position: "MID", price: 7.0, points: 35, form: 6.0, goals: 0, assists: 1, selected: false },
     
-    // Forwards - Premium prices
-    { id: "fwd1", name: "Haileab", team: "11A", position: "FWD", price: 14.0, points: 85, form: 9.5, goals: 12, assists: 4, selected: false },
-    { id: "fwd2", name: "Lewi", team: "10B", position: "FWD", price: 12.0, points: 72, form: 8.5, goals: 9, assists: 3, selected: false },
-    { id: "fwd3", name: "Girum", team: "12A", position: "FWD", price: 10.5, points: 58, form: 7.6, goals: 7, assists: 2, selected: false },
-    { id: "fwd4", name: "Fiker Tilahun", team: "11A", position: "FWD", price: 11.0, points: 62, form: 7.8, goals: 8, assists: 3, selected: false },
-    { id: "fwd5", name: "Abreham", team: "10A", position: "FWD", price: 9.0, points: 48, form: 6.9, goals: 6, assists: 2, selected: false },
-    { id: "fwd6", name: "Samson", team: "9B", position: "FWD", price: 7.0, points: 32, form: 5.8, goals: 4, assists: 1, selected: false },
+    // Forwards - 12C
+    { id: "fwd1", name: "Samson", team: "12C", position: "FWD", price: 12.0, points: 72, form: 8.8, goals: 4, assists: 1, selected: false },
+    { id: "fwd2", name: "Abdela", team: "12C", position: "FWD", price: 9.5, points: 52, form: 7.2, goals: 2, assists: 0, selected: false },
+    { id: "fwd3", name: "Liyu", team: "12C", position: "FWD", price: 8.5, points: 45, form: 6.8, goals: 1, assists: 0, selected: false },
+    // 11A
+    { id: "fwd4", name: "Dawit Fasil", team: "11A", position: "FWD", price: 11.0, points: 65, form: 8.2, goals: 2, assists: 0, selected: false },
+    { id: "fwd5", name: "Amanuel Dejene", team: "11A", position: "FWD", price: 9.0, points: 48, form: 7.0, goals: 0, assists: 2, selected: false },
+    // 11B
+    { id: "fwd6", name: "Daniel Eshetu", team: "11B", position: "FWD", price: 13.5, points: 80, form: 9.0, goals: 4, assists: 0, selected: false },
+    { id: "fwd7", name: "Esayas", team: "11B", position: "FWD", price: 11.5, points: 68, form: 8.5, goals: 3, assists: 0, selected: false },
+    // 12B
+    { id: "fwd8", name: "Elias Markos", team: "12B", position: "FWD", price: 11.0, points: 62, form: 8.0, goals: 3, assists: 0, selected: false },
+    { id: "fwd9", name: "Godoliyas Tekalgn", team: "12B", position: "FWD", price: 8.5, points: 45, form: 6.8, goals: 1, assists: 0, selected: false },
+    // 12A
+    { id: "fwd10", name: "Frezer", team: "12A", position: "FWD", price: 8.0, points: 40, form: 6.5, goals: 0, assists: 0, selected: false },
+    { id: "fwd11", name: "Ezana", team: "12A", position: "FWD", price: 7.5, points: 35, form: 6.0, goals: 0, assists: 0, selected: false },
+    { id: "fwd12", name: "Amanuel", team: "12A", position: "FWD", price: 7.0, points: 32, form: 5.8, goals: 0, assists: 0, selected: false },
+    // 10A
+    { id: "fwd13", name: "Girum Fikremariam", team: "10A", position: "FWD", price: 9.5, points: 50, form: 7.2, goals: 1, assists: 0, selected: false },
+    { id: "fwd14", name: "Ezana Zekarias", team: "10A", position: "FWD", price: 8.0, points: 42, form: 6.5, goals: 0, assists: 0, selected: false },
+    // 10B
+    { id: "fwd15", name: "Yeabsira", team: "10B", position: "FWD", price: 9.0, points: 48, form: 7.0, goals: 1, assists: 0, selected: false },
+    { id: "fwd16", name: "Firaol", team: "10B", position: "FWD", price: 7.5, points: 38, form: 6.2, goals: 0, assists: 0, selected: false },
+    // 10C
+    { id: "fwd17", name: "Henok Yared", team: "10C", position: "FWD", price: 6.5, points: 28, form: 5.5, goals: 0, assists: 0, selected: false },
+    { id: "fwd18", name: "John Samuel", team: "10C", position: "FWD", price: 6.5, points: 26, form: 5.3, goals: 0, assists: 0, selected: false },
+    { id: "fwd19", name: "Nolawi Hailu", team: "10C", position: "FWD", price: 6.5, points: 25, form: 5.2, goals: 0, assists: 0, selected: false },
+    // 9B
+    { id: "fwd20", name: "Lewi", team: "9B", position: "FWD", price: 9.5, points: 52, form: 7.5, goals: 2, assists: 1, selected: false },
+    { id: "fwd21", name: "Biruk", team: "9B", position: "FWD", price: 7.0, points: 35, form: 6.0, goals: 0, assists: 0, selected: false },
+    // 11C
+    { id: "fwd22", name: "Paulos Berihun", team: "11C", position: "FWD", price: 8.5, points: 44, form: 6.8, goals: 0, assists: 0, selected: false },
+    { id: "fwd23", name: "Abiy Mamo", team: "11C", position: "FWD", price: 7.5, points: 38, form: 6.2, goals: 0, assists: 0, selected: false },
   ];
 
   const [players, setPlayers] = useState(allPlayers);
