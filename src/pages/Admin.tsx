@@ -9,68 +9,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Progress } from "@/components/ui/progress";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
+import { useData, type MatchResult, type FantasyPlayer, type Standing } from "@/contexts/DataContext";
 import { 
   Video, Users, Trophy, Calendar, Plus, Trash2, Edit,
-  Youtube, FileText, Shield, Award, Lock, Target, Coins, Save,
-  User, Mail, Crown, LayoutDashboard, Table, Megaphone, 
-  RefreshCw, Download, Upload, Clock, TrendingUp, Activity,
-  CheckCircle, AlertCircle, Zap, Star, BarChart3
+  FileText, Shield, Award, Lock, Target, Coins, Save,
+  User, Crown, LayoutDashboard, Table, Megaphone, 
+  RefreshCw, Download, Clock, TrendingUp, Activity,
+  CheckCircle, Zap, Star, BarChart3
 } from "lucide-react";
-
-interface MediaItem {
-  id: string;
-  title: string;
-  url: string;
-  type: "highlight" | "interview";
-  date: string;
-  views: string;
-}
-
-interface NewsItem {
-  id: string;
-  title: string;
-  excerpt: string;
-  category: string;
-  date: string;
-}
-
-interface MatchResult {
-  id: string;
-  homeTeam: string;
-  awayTeam: string;
-  homeScore: number;
-  awayScore: number;
-  date: string;
-  category: string;
-  stats: {
-    homeShots: number;
-    awayShots: number;
-    homeShotsOnTarget: number;
-    awayShotsOnTarget: number;
-    homeFouls: number;
-    awayFouls: number;
-    homeCorners: number;
-    awayCorners: number;
-    homePasses: number;
-    awayPasses: number;
-  };
-  goals: { player: string; minute: string; assist?: string; team: string }[];
-}
-
-interface FantasyPlayer {
-  id: string;
-  name: string;
-  team: string;
-  position: string;
-  price: number;
-  points: number;
-  goals: number;
-  assists: number;
-}
 
 interface RegisteredUser {
   id: string;
@@ -79,26 +28,6 @@ interface RegisteredUser {
   fantasyTeam?: string[];
   fantasyPoints?: number;
   predictions?: number;
-}
-
-interface Standing {
-  team: string;
-  played: number;
-  won: number;
-  drawn: number;
-  lost: number;
-  gf: number;
-  ga: number;
-  points: number;
-}
-
-interface Announcement {
-  id: string;
-  title: string;
-  message: string;
-  type: "info" | "warning" | "success";
-  active: boolean;
-  createdAt: string;
 }
 
 interface ActivityLog {
@@ -110,72 +39,38 @@ interface ActivityLog {
 
 const Admin = () => {
   const { toast } = useToast();
+  const data = useData();
+  
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem("admin_logged_in") === "true";
   });
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   
-  // Media Management
-  const [mediaItems, setMediaItems] = useState<MediaItem[]>(() => {
-    const stored = localStorage.getItem("ssc_media");
-    return stored ? JSON.parse(stored) : [];
-  });
-  const [newMedia, setNewMedia] = useState<Partial<MediaItem>>({
-    title: "", url: "", type: "highlight", date: "", views: "0"
-  });
-
-  // News Management
-  const [newsItems, setNewsItems] = useState<NewsItem[]>(() => {
-    const stored = localStorage.getItem("ssc_news");
-    return stored ? JSON.parse(stored) : [];
-  });
-  const [newNews, setNewNews] = useState<Partial<NewsItem>>({
-    title: "", excerpt: "", category: "Match Report", date: ""
-  });
-
-  // Match Results Management
-  const [matchResults, setMatchResults] = useState<MatchResult[]>(() => {
-    const stored = localStorage.getItem("ssc_match_results");
-    return stored ? JSON.parse(stored) : [];
-  });
+  // Local state for forms
   const [newResult, setNewResult] = useState<Partial<MatchResult>>({
     homeTeam: "", awayTeam: "", homeScore: 0, awayScore: 0, date: "", category: "Football",
     stats: { homeShots: 0, awayShots: 0, homeShotsOnTarget: 0, awayShotsOnTarget: 0, homeFouls: 0, awayFouls: 0, homeCorners: 0, awayCorners: 0, homePasses: 0, awayPasses: 0 },
     goals: []
   });
   const [newGoal, setNewGoal] = useState({ player: "", minute: "", assist: "", team: "home" });
-
-  // Fantasy Players Management
-  const [fantasyPlayers, setFantasyPlayers] = useState<FantasyPlayer[]>(() => {
-    const stored = localStorage.getItem("ssc_fantasy_players");
-    if (stored) return JSON.parse(stored);
-    return [
-      { id: "gk1", name: "Kaleab Fekadu", team: "10A", position: "GK", price: 8.5, points: 42, goals: 0, assists: 0 },
-      { id: "gk2", name: "Bamlak", team: "9C", position: "GK", price: 7.0, points: 35, goals: 0, assists: 0 },
-      { id: "def1", name: "Fikir", team: "12A", position: "DEF", price: 8.0, points: 40, goals: 2, assists: 0 },
-      { id: "mid1", name: "Haileab Mulugeta", team: "11A", position: "MID", price: 13.0, points: 82, goals: 4, assists: 1 },
-      { id: "mid2", name: "Abraham", team: "12C", position: "MID", price: 10.5, points: 62, goals: 3, assists: 2 },
-      { id: "fwd1", name: "Daniel Eshetu", team: "11B", position: "FWD", price: 13.5, points: 80, goals: 4, assists: 0 },
-      { id: "fwd2", name: "Samson", team: "12C", position: "FWD", price: 12.0, points: 72, goals: 4, assists: 1 },
-    ];
-  });
   const [editingPlayer, setEditingPlayer] = useState<string | null>(null);
-
-  // League Standings
-  const [standings, setStandings] = useState<Standing[]>(() => {
-    const stored = localStorage.getItem("ssc_standings");
-    if (stored) return JSON.parse(stored);
-    return teams.map(team => ({ team, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 }));
-  });
-
-  // Announcements
-  const [announcements, setAnnouncements] = useState<Announcement[]>(() => {
-    const stored = localStorage.getItem("ssc_announcements");
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [editingPlayerData, setEditingPlayerData] = useState<FantasyPlayer | null>(null);
+  const [quickMatch, setQuickMatch] = useState({ homeTeam: "", awayTeam: "", homeScore: 0, awayScore: 0 });
+  const [bulkUpdates, setBulkUpdates] = useState<{[key: string]: number}>({});
+  
+  // Announcements form
   const [newAnnouncement, setNewAnnouncement] = useState<{ title: string; message: string; type: "info" | "warning" | "success" }>({ title: "", message: "", type: "info" });
-
+  
+  // News form
+  const [newNews, setNewNews] = useState({ title: "", excerpt: "", category: "Match Report", date: "" });
+  
+  // Media form
+  const [newMedia, setNewMedia] = useState({ title: "", url: "", type: "highlight" as "highlight" | "interview", date: "", views: "0" });
+  
+  // Upcoming match form
+  const [newUpcoming, setNewUpcoming] = useState({ homeTeam: "", awayTeam: "", date: "", time: "", competition: "" });
+  
   // Activity Log
   const [activityLog, setActivityLog] = useState<ActivityLog[]>(() => {
     const stored = localStorage.getItem("ssc_activity_log");
@@ -184,26 +79,6 @@ const Admin = () => {
 
   // Users Management
   const [registeredUsers, setRegisteredUsers] = useState<RegisteredUser[]>([]);
-
-  // Player of the Week
-  const [playerOfWeek, setPlayerOfWeek] = useState(() => {
-    const stored = localStorage.getItem("ssc_player_of_week");
-    return stored ? JSON.parse(stored) : { name: "", team: "", description: "" };
-  });
-
-  // Team of the Week
-  const [teamOfWeek, setTeamOfWeek] = useState(() => {
-    const stored = localStorage.getItem("ssc_team_of_week");
-    return stored ? JSON.parse(stored) : { players: "", subs: "", description: "" };
-  });
-
-  // Quick Match Update State
-  const [quickMatch, setQuickMatch] = useState({ homeTeam: "", awayTeam: "", homeScore: 0, awayScore: 0 });
-
-  // Bulk Points Update
-  const [bulkUpdates, setBulkUpdates] = useState<{[key: string]: number}>({});
-
-  const teams = ["9A", "9B", "9C", "10A", "10B", "10C", "11A", "11B", "11C", "12A", "12B", "12C"];
 
   // Load registered users
   useEffect(() => {
@@ -251,7 +126,7 @@ const Admin = () => {
     toast({ title: "Logged out", description: "You have been logged out." });
   };
 
-  // If not logged in, show login form
+  // Login screen
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-background">
@@ -287,59 +162,7 @@ const Admin = () => {
     );
   }
 
-  // Save functions
-  const addMedia = () => {
-    if (!newMedia.title || !newMedia.url) {
-      toast({ title: "Error", description: "Please fill in all fields.", variant: "destructive" });
-      return;
-    }
-    const item: MediaItem = {
-      id: `media-${Date.now()}`, title: newMedia.title || "", url: newMedia.url || "",
-      type: newMedia.type as "highlight" | "interview" || "highlight",
-      date: newMedia.date || new Date().toISOString(), views: newMedia.views || "0"
-    };
-    const updated = [...mediaItems, item];
-    setMediaItems(updated);
-    localStorage.setItem("ssc_media", JSON.stringify(updated));
-    setNewMedia({ title: "", url: "", type: "highlight", date: "", views: "0" });
-    logActivity(`Added media: ${item.title}`, "media");
-    toast({ title: "Media added!", description: "New media item has been added." });
-  };
-
-  const removeMedia = (id: string) => {
-    const item = mediaItems.find(m => m.id === id);
-    const updated = mediaItems.filter(m => m.id !== id);
-    setMediaItems(updated);
-    localStorage.setItem("ssc_media", JSON.stringify(updated));
-    logActivity(`Removed media: ${item?.title}`, "media");
-    toast({ title: "Media removed" });
-  };
-
-  const addNews = () => {
-    if (!newNews.title || !newNews.excerpt) {
-      toast({ title: "Error", description: "Please fill in all fields.", variant: "destructive" });
-      return;
-    }
-    const item: NewsItem = {
-      id: `news-${Date.now()}`, title: newNews.title || "", excerpt: newNews.excerpt || "",
-      category: newNews.category || "Match Report", date: newNews.date || new Date().toISOString()
-    };
-    const updated = [...newsItems, item];
-    setNewsItems(updated);
-    localStorage.setItem("ssc_news", JSON.stringify(updated));
-    setNewNews({ title: "", excerpt: "", category: "Match Report", date: "" });
-    logActivity(`Added news: ${item.title}`, "news");
-    toast({ title: "News added!" });
-  };
-
-  const removeNews = (id: string) => {
-    const updated = newsItems.filter(n => n.id !== id);
-    setNewsItems(updated);
-    localStorage.setItem("ssc_news", JSON.stringify(updated));
-    logActivity("Removed news article", "news");
-    toast({ title: "News removed" });
-  };
-
+  // Actions
   const addGoalToResult = () => {
     if (!newGoal.player || !newGoal.minute) return;
     const goals = [...(newResult.goals || []), {
@@ -351,170 +174,25 @@ const Admin = () => {
     setNewGoal({ player: "", minute: "", assist: "", team: "home" });
   };
 
-  const addMatchResult = () => {
+  const handleAddMatchResult = () => {
     if (!newResult.homeTeam || !newResult.awayTeam) {
       toast({ title: "Error", description: "Please select both teams.", variant: "destructive" });
       return;
     }
-    const result: MatchResult = {
-      id: `result-${Date.now()}`, homeTeam: newResult.homeTeam || "", awayTeam: newResult.awayTeam || "",
+    data.addMatchResult({
+      homeTeam: newResult.homeTeam || "", awayTeam: newResult.awayTeam || "",
       homeScore: newResult.homeScore || 0, awayScore: newResult.awayScore || 0,
       date: newResult.date || new Date().toISOString().split('T')[0], category: newResult.category || "Football",
       stats: newResult.stats || { homeShots: 0, awayShots: 0, homeShotsOnTarget: 0, awayShotsOnTarget: 0, homeFouls: 0, awayFouls: 0, homeCorners: 0, awayCorners: 0, homePasses: 0, awayPasses: 0 },
       goals: newResult.goals || []
-    };
-    const updated = [...matchResults, result];
-    setMatchResults(updated);
-    localStorage.setItem("ssc_match_results", JSON.stringify(updated));
-    
-    // Auto-update standings
-    updateStandingsFromResult(result);
-    
+    });
+    logActivity(`Added result: ${newResult.homeTeam} ${newResult.homeScore}-${newResult.awayScore} ${newResult.awayTeam}`, "match");
     setNewResult({
       homeTeam: "", awayTeam: "", homeScore: 0, awayScore: 0, date: "", category: "Football",
       stats: { homeShots: 0, awayShots: 0, homeShotsOnTarget: 0, awayShotsOnTarget: 0, homeFouls: 0, awayFouls: 0, homeCorners: 0, awayCorners: 0, homePasses: 0, awayPasses: 0 },
       goals: []
     });
-    logActivity(`Added result: ${result.homeTeam} ${result.homeScore}-${result.awayScore} ${result.awayTeam}`, "match");
     toast({ title: "Match result added!" });
-  };
-
-  const updateStandingsFromResult = (result: MatchResult) => {
-    const newStandings = [...standings];
-    const homeIdx = newStandings.findIndex(s => s.team === result.homeTeam);
-    const awayIdx = newStandings.findIndex(s => s.team === result.awayTeam);
-    
-    if (homeIdx !== -1 && awayIdx !== -1) {
-      newStandings[homeIdx].played++;
-      newStandings[awayIdx].played++;
-      newStandings[homeIdx].gf += result.homeScore;
-      newStandings[homeIdx].ga += result.awayScore;
-      newStandings[awayIdx].gf += result.awayScore;
-      newStandings[awayIdx].ga += result.homeScore;
-      
-      if (result.homeScore > result.awayScore) {
-        newStandings[homeIdx].won++;
-        newStandings[homeIdx].points += 3;
-        newStandings[awayIdx].lost++;
-      } else if (result.homeScore < result.awayScore) {
-        newStandings[awayIdx].won++;
-        newStandings[awayIdx].points += 3;
-        newStandings[homeIdx].lost++;
-      } else {
-        newStandings[homeIdx].drawn++;
-        newStandings[awayIdx].drawn++;
-        newStandings[homeIdx].points++;
-        newStandings[awayIdx].points++;
-      }
-      
-      setStandings(newStandings);
-      localStorage.setItem("ssc_standings", JSON.stringify(newStandings));
-    }
-  };
-
-  const removeMatchResult = (id: string) => {
-    const updated = matchResults.filter(m => m.id !== id);
-    setMatchResults(updated);
-    localStorage.setItem("ssc_match_results", JSON.stringify(updated));
-    logActivity("Removed match result", "match");
-    toast({ title: "Result removed" });
-  };
-
-  const updateFantasyPlayer = (id: string, updates: Partial<FantasyPlayer>) => {
-    const updated = fantasyPlayers.map(p => p.id === id ? { ...p, ...updates } : p);
-    setFantasyPlayers(updated);
-    localStorage.setItem("ssc_fantasy_players", JSON.stringify(updated));
-    setEditingPlayer(null);
-    logActivity(`Updated player: ${updates.name || id}`, "fantasy");
-    toast({ title: "Player updated!" });
-  };
-
-  const addFantasyPlayer = () => {
-    const newPlayer: FantasyPlayer = {
-      id: `player-${Date.now()}`, name: "New Player", team: "9A",
-      position: "MID", price: 5.0, points: 0, goals: 0, assists: 0
-    };
-    const updated = [...fantasyPlayers, newPlayer];
-    setFantasyPlayers(updated);
-    localStorage.setItem("ssc_fantasy_players", JSON.stringify(updated));
-    setEditingPlayer(newPlayer.id);
-    logActivity("Added new fantasy player", "fantasy");
-    toast({ title: "Player added!" });
-  };
-
-  const removeFantasyPlayer = (id: string) => {
-    const updated = fantasyPlayers.filter(p => p.id !== id);
-    setFantasyPlayers(updated);
-    localStorage.setItem("ssc_fantasy_players", JSON.stringify(updated));
-    logActivity("Removed fantasy player", "fantasy");
-    toast({ title: "Player removed" });
-  };
-
-  const applyBulkPointsUpdate = () => {
-    const updated = fantasyPlayers.map(p => ({
-      ...p,
-      points: p.points + (bulkUpdates[p.id] || 0)
-    }));
-    setFantasyPlayers(updated);
-    localStorage.setItem("ssc_fantasy_players", JSON.stringify(updated));
-    setBulkUpdates({});
-    logActivity("Applied bulk points update", "fantasy");
-    toast({ title: "Bulk update applied!", description: "All player points have been updated." });
-  };
-
-  const savePlayerOfWeek = () => {
-    localStorage.setItem("ssc_player_of_week", JSON.stringify(playerOfWeek));
-    logActivity(`Set Player of Week: ${playerOfWeek.name}`, "awards");
-    toast({ title: "Saved!" });
-  };
-
-  const saveTeamOfWeek = () => {
-    localStorage.setItem("ssc_team_of_week", JSON.stringify(teamOfWeek));
-    logActivity("Updated Team of the Week", "awards");
-    toast({ title: "Saved!" });
-  };
-
-  const addAnnouncement = () => {
-    if (!newAnnouncement.title || !newAnnouncement.message) {
-      toast({ title: "Error", description: "Please fill in all fields.", variant: "destructive" });
-      return;
-    }
-    const announcement: Announcement = {
-      id: `ann-${Date.now()}`, title: newAnnouncement.title, message: newAnnouncement.message,
-      type: newAnnouncement.type, active: true, createdAt: new Date().toISOString()
-    };
-    const updated = [...announcements, announcement];
-    setAnnouncements(updated);
-    localStorage.setItem("ssc_announcements", JSON.stringify(updated));
-    setNewAnnouncement({ title: "", message: "", type: "info" });
-    logActivity(`Added announcement: ${announcement.title}`, "announcement");
-    toast({ title: "Announcement added!" });
-  };
-
-  const toggleAnnouncement = (id: string) => {
-    const updated = announcements.map(a => a.id === id ? { ...a, active: !a.active } : a);
-    setAnnouncements(updated);
-    localStorage.setItem("ssc_announcements", JSON.stringify(updated));
-  };
-
-  const removeAnnouncement = (id: string) => {
-    const updated = announcements.filter(a => a.id !== id);
-    setAnnouncements(updated);
-    localStorage.setItem("ssc_announcements", JSON.stringify(updated));
-    toast({ title: "Announcement removed" });
-  };
-
-  const updateStanding = (team: string, field: keyof Standing, value: number) => {
-    const updated = standings.map(s => {
-      if (s.team === team) {
-        const newStanding = { ...s, [field]: value };
-        newStanding.points = newStanding.won * 3 + newStanding.drawn;
-        return newStanding;
-      }
-      return s;
-    });
-    setStandings(updated);
-    localStorage.setItem("ssc_standings", JSON.stringify(updated));
   };
 
   const quickAddResult = () => {
@@ -522,52 +200,147 @@ const Admin = () => {
       toast({ title: "Error", description: "Select both teams.", variant: "destructive" });
       return;
     }
-    const result: MatchResult = {
-      id: `result-${Date.now()}`, homeTeam: quickMatch.homeTeam, awayTeam: quickMatch.awayTeam,
+    data.addMatchResult({
+      homeTeam: quickMatch.homeTeam, awayTeam: quickMatch.awayTeam,
       homeScore: quickMatch.homeScore, awayScore: quickMatch.awayScore,
       date: new Date().toISOString().split('T')[0], category: "Football",
       stats: { homeShots: 0, awayShots: 0, homeShotsOnTarget: 0, awayShotsOnTarget: 0, homeFouls: 0, awayFouls: 0, homeCorners: 0, awayCorners: 0, homePasses: 0, awayPasses: 0 },
       goals: []
-    };
-    const updated = [...matchResults, result];
-    setMatchResults(updated);
-    localStorage.setItem("ssc_match_results", JSON.stringify(updated));
-    updateStandingsFromResult(result);
+    });
+    logActivity(`Quick result: ${quickMatch.homeTeam} ${quickMatch.homeScore}-${quickMatch.awayScore} ${quickMatch.awayTeam}`, "match");
     setQuickMatch({ homeTeam: "", awayTeam: "", homeScore: 0, awayScore: 0 });
-    logActivity(`Quick result: ${result.homeTeam} ${result.homeScore}-${result.awayScore} ${result.awayTeam}`, "match");
     toast({ title: "Result added!" });
   };
 
+  const updateStanding = (team: string, field: keyof Standing, value: number) => {
+    const updated = data.standings.map(s => {
+      if (s.team === team) {
+        const newStanding = { ...s, [field]: value };
+        newStanding.points = newStanding.won * 3 + newStanding.drawn;
+        return newStanding;
+      }
+      return s;
+    });
+    data.updateStandings(updated);
+  };
+
+  const resetStandings = () => {
+    const reset = data.teams.map(team => ({ team, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 }));
+    data.updateStandings(reset);
+    logActivity("Reset league standings", "system");
+    toast({ title: "Standings reset!" });
+  };
+
+  const startEditPlayer = (player: FantasyPlayer) => {
+    setEditingPlayer(player.id);
+    setEditingPlayerData({ ...player });
+  };
+
+  const savePlayerEdit = () => {
+    if (editingPlayerData) {
+      data.updateFantasyPlayer(editingPlayerData.id, editingPlayerData);
+      logActivity(`Updated player: ${editingPlayerData.name}`, "fantasy");
+      toast({ title: "Player updated!" });
+    }
+    setEditingPlayer(null);
+    setEditingPlayerData(null);
+  };
+
+  const handleAddPlayer = () => {
+    data.addFantasyPlayer({
+      name: "New Player", team: "9A", position: "MID", price: 5.0, points: 0, goals: 0, assists: 0
+    });
+    logActivity("Added new fantasy player", "fantasy");
+    toast({ title: "Player added!" });
+  };
+
+  const applyBulkPointsUpdate = () => {
+    Object.entries(bulkUpdates).forEach(([id, points]) => {
+      if (points !== 0) {
+        const player = data.fantasyPlayers.find(p => p.id === id);
+        if (player) {
+          data.updateFantasyPlayer(id, { points: player.points + points });
+        }
+      }
+    });
+    setBulkUpdates({});
+    logActivity("Applied bulk points update", "fantasy");
+    toast({ title: "Points updated!" });
+  };
+
+  const handleAddAnnouncement = () => {
+    if (!newAnnouncement.title || !newAnnouncement.message) {
+      toast({ title: "Error", description: "Fill in all fields.", variant: "destructive" });
+      return;
+    }
+    data.addAnnouncement({ ...newAnnouncement, active: true });
+    logActivity(`Created announcement: ${newAnnouncement.title}`, "announce");
+    setNewAnnouncement({ title: "", message: "", type: "info" });
+    toast({ title: "Announcement created!" });
+  };
+
+  const handleAddNews = () => {
+    if (!newNews.title || !newNews.excerpt) {
+      toast({ title: "Error", description: "Fill in all fields.", variant: "destructive" });
+      return;
+    }
+    data.addNewsItem({ ...newNews, date: newNews.date || new Date().toISOString() });
+    logActivity(`Added news: ${newNews.title}`, "news");
+    setNewNews({ title: "", excerpt: "", category: "Match Report", date: "" });
+    toast({ title: "News added!" });
+  };
+
+  const handleAddMedia = () => {
+    if (!newMedia.title || !newMedia.url) {
+      toast({ title: "Error", description: "Fill in all fields.", variant: "destructive" });
+      return;
+    }
+    data.addMediaItem({ ...newMedia, date: newMedia.date || new Date().toISOString() });
+    logActivity(`Added media: ${newMedia.title}`, "media");
+    setNewMedia({ title: "", url: "", type: "highlight", date: "", views: "0" });
+    toast({ title: "Media added!" });
+  };
+
+  const handleAddUpcomingMatch = () => {
+    if (!newUpcoming.homeTeam || !newUpcoming.awayTeam) {
+      toast({ title: "Error", description: "Select both teams.", variant: "destructive" });
+      return;
+    }
+    data.addUpcomingMatch(newUpcoming);
+    logActivity(`Added upcoming: ${newUpcoming.homeTeam} vs ${newUpcoming.awayTeam}`, "match");
+    setNewUpcoming({ homeTeam: "", awayTeam: "", date: "", time: "", competition: "" });
+    toast({ title: "Upcoming match added!" });
+  };
+
   const exportData = () => {
-    const data = {
-      media: mediaItems, news: newsItems, results: matchResults,
-      fantasy: fantasyPlayers, standings, announcements, 
-      playerOfWeek, teamOfWeek, exportDate: new Date().toISOString()
+    const exportObj = {
+      matchResults: data.matchResults,
+      standings: data.standings,
+      fantasyPlayers: data.fantasyPlayers,
+      announcements: data.announcements,
+      newsItems: data.newsItems,
+      mediaItems: data.mediaItems,
+      upcomingMatches: data.upcomingMatches,
+      playerOfWeek: data.playerOfWeek,
+      teamOfWeek: data.teamOfWeek,
+      exportDate: new Date().toISOString()
     };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `ssc-backup-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     logActivity("Exported data backup", "system");
-    toast({ title: "Data exported!", description: "Backup file downloaded." });
-  };
-
-  const resetStandings = () => {
-    const reset = teams.map(team => ({ team, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 }));
-    setStandings(reset);
-    localStorage.setItem("ssc_standings", JSON.stringify(reset));
-    logActivity("Reset league standings", "system");
-    toast({ title: "Standings reset!" });
+    toast({ title: "Data exported!" });
   };
 
   // Stats for dashboard
-  const totalMatches = matchResults.length;
+  const totalMatches = data.matchResults.length;
   const totalUsers = registeredUsers.length;
-  const totalPlayers = fantasyPlayers.length;
-  const activeAnnouncements = announcements.filter(a => a.active).length;
-  const topScorer = fantasyPlayers.reduce((max, p) => p.goals > max.goals ? p : max, fantasyPlayers[0]);
+  const totalPlayers = data.fantasyPlayers.length;
+  const activeAnnouncements = data.announcements.filter(a => a.active).length;
+  const topScorer = data.fantasyPlayers.length > 0 ? data.fantasyPlayers.reduce((max, p) => p.goals > max.goals ? p : max, data.fantasyPlayers[0]) : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -601,6 +374,9 @@ const Admin = () => {
               </TabsTrigger>
               <TabsTrigger value="standings" className="font-bebas text-xs">
                 <Table className="h-4 w-4 mr-1" /> Standings
+              </TabsTrigger>
+              <TabsTrigger value="upcoming" className="font-bebas text-xs">
+                <Calendar className="h-4 w-4 mr-1" /> Upcoming
               </TabsTrigger>
               <TabsTrigger value="fantasy" className="font-bebas text-xs">
                 <Coins className="h-4 w-4 mr-1" /> Fantasy
@@ -687,14 +463,14 @@ const Admin = () => {
                       <Zap className="h-5 w-5 text-primary" />
                       Quick Match Result
                     </CardTitle>
-                    <CardDescription>Quickly add a match score without detailed stats</CardDescription>
+                    <CardDescription>Quickly add a match score</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-5 gap-2 items-center">
                       <Select value={quickMatch.homeTeam} onValueChange={(v) => setQuickMatch({...quickMatch, homeTeam: v})}>
                         <SelectTrigger><SelectValue placeholder="Home" /></SelectTrigger>
                         <SelectContent className="bg-background border z-50">
-                          {teams.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                          {data.teams.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                         </SelectContent>
                       </Select>
                       <Input type="number" min="0" className="text-center" value={quickMatch.homeScore} onChange={(e) => setQuickMatch({...quickMatch, homeScore: parseInt(e.target.value) || 0})} />
@@ -703,7 +479,7 @@ const Admin = () => {
                       <Select value={quickMatch.awayTeam} onValueChange={(v) => setQuickMatch({...quickMatch, awayTeam: v})}>
                         <SelectTrigger><SelectValue placeholder="Away" /></SelectTrigger>
                         <SelectContent className="bg-background border z-50">
-                          {teams.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                          {data.teams.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                         </SelectContent>
                       </Select>
                     </div>
@@ -785,7 +561,7 @@ const Admin = () => {
                         <Select value={newResult.homeTeam} onValueChange={(v) => setNewResult({...newResult, homeTeam: v})}>
                           <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent className="bg-background border z-50">
-                            {teams.map(team => <SelectItem key={team} value={team}>{team}</SelectItem>)}
+                            {data.teams.map(team => <SelectItem key={team} value={team}>{team}</SelectItem>)}
                           </SelectContent>
                         </Select>
                       </div>
@@ -802,7 +578,7 @@ const Admin = () => {
                         <Select value={newResult.awayTeam} onValueChange={(v) => setNewResult({...newResult, awayTeam: v})}>
                           <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent className="bg-background border z-50">
-                            {teams.map(team => <SelectItem key={team} value={team}>{team}</SelectItem>)}
+                            {data.teams.map(team => <SelectItem key={team} value={team}>{team}</SelectItem>)}
                           </SelectContent>
                         </Select>
                       </div>
@@ -840,10 +616,6 @@ const Admin = () => {
                         <span className="text-center py-2">On Target</span>
                         <Input type="number" min="0" className="text-center" value={newResult.stats?.awayShotsOnTarget} onChange={(e) => setNewResult({...newResult, stats: {...newResult.stats!, awayShotsOnTarget: parseInt(e.target.value) || 0}})} />
                         
-                        <Input type="number" min="0" className="text-center" value={newResult.stats?.homePasses} onChange={(e) => setNewResult({...newResult, stats: {...newResult.stats!, homePasses: parseInt(e.target.value) || 0}})} />
-                        <span className="text-center py-2">Passes</span>
-                        <Input type="number" min="0" className="text-center" value={newResult.stats?.awayPasses} onChange={(e) => setNewResult({...newResult, stats: {...newResult.stats!, awayPasses: parseInt(e.target.value) || 0}})} />
-                        
                         <Input type="number" min="0" className="text-center" value={newResult.stats?.homeCorners} onChange={(e) => setNewResult({...newResult, stats: {...newResult.stats!, homeCorners: parseInt(e.target.value) || 0}})} />
                         <span className="text-center py-2">Corners</span>
                         <Input type="number" min="0" className="text-center" value={newResult.stats?.awayCorners} onChange={(e) => setNewResult({...newResult, stats: {...newResult.stats!, awayCorners: parseInt(e.target.value) || 0}})} />
@@ -851,12 +623,16 @@ const Admin = () => {
                         <Input type="number" min="0" className="text-center" value={newResult.stats?.homeFouls} onChange={(e) => setNewResult({...newResult, stats: {...newResult.stats!, homeFouls: parseInt(e.target.value) || 0}})} />
                         <span className="text-center py-2">Fouls</span>
                         <Input type="number" min="0" className="text-center" value={newResult.stats?.awayFouls} onChange={(e) => setNewResult({...newResult, stats: {...newResult.stats!, awayFouls: parseInt(e.target.value) || 0}})} />
+                        
+                        <Input type="number" min="0" className="text-center" value={newResult.stats?.homePasses} onChange={(e) => setNewResult({...newResult, stats: {...newResult.stats!, homePasses: parseInt(e.target.value) || 0}})} />
+                        <span className="text-center py-2">Passes</span>
+                        <Input type="number" min="0" className="text-center" value={newResult.stats?.awayPasses} onChange={(e) => setNewResult({...newResult, stats: {...newResult.stats!, awayPasses: parseInt(e.target.value) || 0}})} />
                       </div>
                     </div>
 
                     <div className="border-t pt-4">
                       <Label className="text-lg font-bebas">Goal Scorers</Label>
-                      <div className="grid grid-cols-4 gap-2 mt-3">
+                      <div className="grid grid-cols-5 gap-2 mt-3">
                         <Input placeholder="Player" value={newGoal.player} onChange={(e) => setNewGoal({...newGoal, player: e.target.value})} />
                         <Input placeholder="Min" value={newGoal.minute} onChange={(e) => setNewGoal({...newGoal, minute: e.target.value})} />
                         <Input placeholder="Assist" value={newGoal.assist} onChange={(e) => setNewGoal({...newGoal, assist: e.target.value})} />
@@ -867,39 +643,37 @@ const Admin = () => {
                             <SelectItem value="away">Away</SelectItem>
                           </SelectContent>
                         </Select>
+                        <Button onClick={addGoalToResult}><Plus className="h-4 w-4" /></Button>
                       </div>
-                      <Button variant="outline" size="sm" className="mt-2" onClick={addGoalToResult}>
-                        <Plus className="h-4 w-4 mr-1" /> Add Goal
-                      </Button>
-                      {newResult.goals && newResult.goals.length > 0 && (
+                      {(newResult.goals || []).length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1">
-                          {newResult.goals.map((g, i) => (
-                            <Badge key={i} variant="secondary">{g.player} ({g.minute}')</Badge>
+                          {(newResult.goals || []).map((g, i) => (
+                            <Badge key={i} variant="outline">{g.player} ({g.minute}){g.assist && ` - ${g.assist}`}</Badge>
                           ))}
                         </div>
                       )}
                     </div>
 
-                    <Button onClick={addMatchResult} className="w-full gradient-orange text-primary-foreground">
-                      <Plus className="h-4 w-4 mr-2" /> Save Match Result
+                    <Button onClick={handleAddMatchResult} className="w-full gradient-orange text-primary-foreground">
+                      <Plus className="h-4 w-4 mr-2" /> Add Match Result
                     </Button>
                   </CardContent>
                 </Card>
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className="font-bebas">Saved Results ({matchResults.length})</CardTitle>
+                    <CardTitle className="font-bebas">Previous Results</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ScrollArea className="h-[600px]">
-                      <div className="space-y-3">
-                        {matchResults.map((result) => (
-                          <div key={result.id} className="p-4 bg-muted rounded-lg">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="font-bold text-lg">
+                      <div className="space-y-2">
+                        {data.matchResults.slice().reverse().map((result) => (
+                          <div key={result.id} className="p-3 bg-muted rounded-lg">
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium">
                                 {result.homeTeam} {result.homeScore} - {result.awayScore} {result.awayTeam}
                               </span>
-                              <Button variant="ghost" size="sm" onClick={() => removeMatchResult(result.id)}>
+                              <Button variant="ghost" size="sm" onClick={() => data.removeMatchResult(result.id)}>
                                 <Trash2 className="h-4 w-4 text-destructive" />
                               </Button>
                             </div>
@@ -907,13 +681,13 @@ const Admin = () => {
                             {result.goals.length > 0 && (
                               <div className="mt-2 flex flex-wrap gap-1">
                                 {result.goals.map((g, i) => (
-                                  <Badge key={i} variant="outline" className="text-xs">{g.player} {g.minute}'</Badge>
+                                  <Badge key={i} variant="outline" className="text-xs">{g.player} {g.minute}</Badge>
                                 ))}
                               </div>
                             )}
                           </div>
                         ))}
-                        {matchResults.length === 0 && (
+                        {data.matchResults.length === 0 && (
                           <p className="text-center text-muted-foreground py-8">No results yet</p>
                         )}
                       </div>
@@ -933,11 +707,16 @@ const Admin = () => {
                         <BarChart3 className="h-5 w-5 text-primary" />
                         League Standings
                       </CardTitle>
-                      <CardDescription>Manually edit or auto-update from results</CardDescription>
+                      <CardDescription>Edit standings or reset to recalculate from results</CardDescription>
                     </div>
-                    <Button variant="outline" size="sm" onClick={resetStandings}>
-                      <RefreshCw className="h-4 w-4 mr-1" /> Reset All
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => data.recalculateStandings()}>
+                        <RefreshCw className="h-4 w-4 mr-1" /> Recalculate
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={resetStandings}>
+                        <Trash2 className="h-4 w-4 mr-1" /> Reset All
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -956,7 +735,7 @@ const Admin = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {standings.sort((a, b) => b.points - a.points || (b.gf - b.ga) - (a.gf - a.ga)).map((s, i) => (
+                        {[...data.standings].sort((a, b) => b.points - a.points || (b.gf - b.ga) - (a.gf - a.ga)).map((s, i) => (
                           <tr key={s.team} className={`border-b ${i < 3 ? 'bg-primary/5' : ''}`}>
                             <td className="p-2 font-medium">{s.team}</td>
                             <td className="text-center p-1">
@@ -987,6 +766,85 @@ const Admin = () => {
               </Card>
             </TabsContent>
 
+            {/* Upcoming Matches */}
+            <TabsContent value="upcoming">
+              <div className="grid lg:grid-cols-2 gap-8">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-bebas flex items-center gap-2">
+                      <Calendar className="h-5 w-5 text-primary" />
+                      Add Upcoming Match
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Home Team</Label>
+                        <Select value={newUpcoming.homeTeam} onValueChange={(v) => setNewUpcoming({...newUpcoming, homeTeam: v})}>
+                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectContent className="bg-background border z-50">
+                            {data.teams.map(team => <SelectItem key={team} value={team}>{team}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Away Team</Label>
+                        <Select value={newUpcoming.awayTeam} onValueChange={(v) => setNewUpcoming({...newUpcoming, awayTeam: v})}>
+                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectContent className="bg-background border z-50">
+                            {data.teams.map(team => <SelectItem key={team} value={team}>{team}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="space-y-2">
+                        <Label>Date</Label>
+                        <Input value={newUpcoming.date} onChange={(e) => setNewUpcoming({...newUpcoming, date: e.target.value})} placeholder="Dec 20" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Time</Label>
+                        <Input value={newUpcoming.time} onChange={(e) => setNewUpcoming({...newUpcoming, time: e.target.value})} placeholder="3:00 PM" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Competition</Label>
+                        <Input value={newUpcoming.competition} onChange={(e) => setNewUpcoming({...newUpcoming, competition: e.target.value})} placeholder="Semifinals" />
+                      </div>
+                    </div>
+                    <Button onClick={handleAddUpcomingMatch} className="w-full gradient-orange text-primary-foreground">
+                      <Plus className="h-4 w-4 mr-2" /> Add Match
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-bebas">Scheduled Matches</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ScrollArea className="h-[400px]">
+                      <div className="space-y-2">
+                        {data.upcomingMatches.map((match) => (
+                          <div key={match.id} className="p-3 bg-muted rounded-lg flex items-center justify-between">
+                            <div>
+                              <p className="font-medium">{match.homeTeam} vs {match.awayTeam}</p>
+                              <p className="text-xs text-muted-foreground">{match.date} • {match.time} • {match.competition}</p>
+                            </div>
+                            <Button variant="ghost" size="sm" onClick={() => data.removeUpcomingMatch(match.id)}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
+                        ))}
+                        {data.upcomingMatches.length === 0 && (
+                          <p className="text-center text-muted-foreground py-8">No upcoming matches</p>
+                        )}
+                      </div>
+                    </ScrollArea>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
             {/* Fantasy Players */}
             <TabsContent value="fantasy">
               <div className="grid lg:grid-cols-3 gap-6">
@@ -998,22 +856,22 @@ const Admin = () => {
                           <Coins className="h-5 w-5 text-primary" />
                           Fantasy Players
                         </CardTitle>
-                        <Button onClick={addFantasyPlayer}><Plus className="h-4 w-4 mr-2" /> Add</Button>
+                        <Button onClick={handleAddPlayer}><Plus className="h-4 w-4 mr-2" /> Add</Button>
                       </div>
                     </CardHeader>
                     <CardContent>
                       <ScrollArea className="h-[500px]">
                         <div className="space-y-2">
-                          {fantasyPlayers.map((player) => (
+                          {data.fantasyPlayers.map((player) => (
                             <div key={player.id} className="p-3 bg-muted rounded-lg">
-                              {editingPlayer === player.id ? (
+                              {editingPlayer === player.id && editingPlayerData ? (
                                 <div className="grid grid-cols-8 gap-2 items-center">
-                                  <Input value={player.name} onChange={(e) => setFantasyPlayers(fantasyPlayers.map(p => p.id === player.id ? {...p, name: e.target.value} : p))} />
-                                  <Select value={player.team} onValueChange={(v) => setFantasyPlayers(fantasyPlayers.map(p => p.id === player.id ? {...p, team: v} : p))}>
+                                  <Input value={editingPlayerData.name} onChange={(e) => setEditingPlayerData({...editingPlayerData, name: e.target.value})} />
+                                  <Select value={editingPlayerData.team} onValueChange={(v) => setEditingPlayerData({...editingPlayerData, team: v})}>
                                     <SelectTrigger><SelectValue /></SelectTrigger>
-                                    <SelectContent className="bg-background border z-50">{teams.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+                                    <SelectContent className="bg-background border z-50">{data.teams.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
                                   </Select>
-                                  <Select value={player.position} onValueChange={(v) => setFantasyPlayers(fantasyPlayers.map(p => p.id === player.id ? {...p, position: v} : p))}>
+                                  <Select value={editingPlayerData.position} onValueChange={(v) => setEditingPlayerData({...editingPlayerData, position: v})}>
                                     <SelectTrigger><SelectValue /></SelectTrigger>
                                     <SelectContent className="bg-background border z-50">
                                       <SelectItem value="GK">GK</SelectItem>
@@ -1022,13 +880,13 @@ const Admin = () => {
                                       <SelectItem value="FWD">FWD</SelectItem>
                                     </SelectContent>
                                   </Select>
-                                  <Input type="number" step="0.5" value={player.price} onChange={(e) => setFantasyPlayers(fantasyPlayers.map(p => p.id === player.id ? {...p, price: parseFloat(e.target.value) || 0} : p))} />
-                                  <Input type="number" value={player.points} onChange={(e) => setFantasyPlayers(fantasyPlayers.map(p => p.id === player.id ? {...p, points: parseInt(e.target.value) || 0} : p))} />
-                                  <Input type="number" value={player.goals} onChange={(e) => setFantasyPlayers(fantasyPlayers.map(p => p.id === player.id ? {...p, goals: parseInt(e.target.value) || 0} : p))} />
-                                  <Input type="number" value={player.assists} onChange={(e) => setFantasyPlayers(fantasyPlayers.map(p => p.id === player.id ? {...p, assists: parseInt(e.target.value) || 0} : p))} />
+                                  <Input type="number" step="0.5" value={editingPlayerData.price} onChange={(e) => setEditingPlayerData({...editingPlayerData, price: parseFloat(e.target.value) || 0})} />
+                                  <Input type="number" value={editingPlayerData.points} onChange={(e) => setEditingPlayerData({...editingPlayerData, points: parseInt(e.target.value) || 0})} />
+                                  <Input type="number" value={editingPlayerData.goals} onChange={(e) => setEditingPlayerData({...editingPlayerData, goals: parseInt(e.target.value) || 0})} />
+                                  <Input type="number" value={editingPlayerData.assists} onChange={(e) => setEditingPlayerData({...editingPlayerData, assists: parseInt(e.target.value) || 0})} />
                                   <div className="flex gap-1">
-                                    <Button size="sm" onClick={() => updateFantasyPlayer(player.id, player)}><Save className="h-4 w-4" /></Button>
-                                    <Button size="sm" variant="destructive" onClick={() => removeFantasyPlayer(player.id)}><Trash2 className="h-4 w-4" /></Button>
+                                    <Button size="sm" onClick={savePlayerEdit}><Save className="h-4 w-4" /></Button>
+                                    <Button size="sm" variant="destructive" onClick={() => { data.removeFantasyPlayer(player.id); setEditingPlayer(null); }}><Trash2 className="h-4 w-4" /></Button>
                                   </div>
                                 </div>
                               ) : (
@@ -1042,7 +900,7 @@ const Admin = () => {
                                     <span className="text-primary font-bold">£{player.price}M</span>
                                     <span className="text-sm">{player.points}pts</span>
                                     <span className="text-xs text-muted-foreground">{player.goals}G {player.assists}A</span>
-                                    <Button variant="ghost" size="sm" onClick={() => setEditingPlayer(player.id)}><Edit className="h-4 w-4" /></Button>
+                                    <Button variant="ghost" size="sm" onClick={() => startEditPlayer(player)}><Edit className="h-4 w-4" /></Button>
                                   </div>
                                 </div>
                               )}
@@ -1060,12 +918,12 @@ const Admin = () => {
                       <Zap className="h-5 w-5 text-primary" />
                       Bulk Points Update
                     </CardTitle>
-                    <CardDescription>Add points to multiple players at once</CardDescription>
+                    <CardDescription>Add points to multiple players</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ScrollArea className="h-[400px]">
                       <div className="space-y-2">
-                        {fantasyPlayers.map((player) => (
+                        {data.fantasyPlayers.map((player) => (
                           <div key={player.id} className="flex items-center gap-2">
                             <span className="flex-1 text-sm truncate">{player.name}</span>
                             <Input 
@@ -1190,29 +1048,28 @@ const Admin = () => {
                       <Megaphone className="h-5 w-5 text-primary" />
                       Create Announcement
                     </CardTitle>
-                    <CardDescription>Create banners that display across the site</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
                       <Label>Title</Label>
-                      <Input placeholder="Match Day Update" value={newAnnouncement.title} onChange={(e) => setNewAnnouncement({...newAnnouncement, title: e.target.value})} />
+                      <Input value={newAnnouncement.title} onChange={(e) => setNewAnnouncement({...newAnnouncement, title: e.target.value})} placeholder="Important Update" />
                     </div>
                     <div className="space-y-2">
                       <Label>Message</Label>
-                      <Textarea placeholder="Today's match between 11A and 12B starts at 3PM..." value={newAnnouncement.message} onChange={(e) => setNewAnnouncement({...newAnnouncement, message: e.target.value})} />
+                      <Textarea value={newAnnouncement.message} onChange={(e) => setNewAnnouncement({...newAnnouncement, message: e.target.value})} placeholder="Your announcement message..." />
                     </div>
                     <div className="space-y-2">
                       <Label>Type</Label>
                       <Select value={newAnnouncement.type} onValueChange={(v: "info" | "warning" | "success") => setNewAnnouncement({...newAnnouncement, type: v})}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent className="bg-background border z-50">
-                          <SelectItem value="info">Info (Blue)</SelectItem>
-                          <SelectItem value="warning">Warning (Yellow)</SelectItem>
-                          <SelectItem value="success">Success (Green)</SelectItem>
+                          <SelectItem value="info">Info</SelectItem>
+                          <SelectItem value="warning">Warning</SelectItem>
+                          <SelectItem value="success">Success</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-                    <Button onClick={addAnnouncement} className="w-full gradient-orange text-primary-foreground">
+                    <Button onClick={handleAddAnnouncement} className="w-full gradient-orange text-primary-foreground">
                       <Plus className="h-4 w-4 mr-2" /> Create Announcement
                     </Button>
                   </CardContent>
@@ -1220,31 +1077,27 @@ const Admin = () => {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className="font-bebas">Active Announcements ({announcements.length})</CardTitle>
+                    <CardTitle className="font-bebas">Active Announcements</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ScrollArea className="h-[400px]">
-                      <div className="space-y-3">
-                        {announcements.map((ann) => (
-                          <div key={ann.id} className={`p-4 rounded-lg border-l-4 ${ann.type === 'info' ? 'bg-blue-500/10 border-blue-500' : ann.type === 'warning' ? 'bg-yellow-500/10 border-yellow-500' : 'bg-green-500/10 border-green-500'}`}>
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="font-bold">{ann.title}</span>
+                      <div className="space-y-2">
+                        {data.announcements.map((ann) => (
+                          <div key={ann.id} className={`p-3 rounded-lg border ${ann.type === 'warning' ? 'bg-yellow-500/10 border-yellow-500' : ann.type === 'success' ? 'bg-green-500/10 border-green-500' : 'bg-blue-500/10 border-blue-500'}`}>
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium">{ann.title}</span>
                               <div className="flex items-center gap-2">
-                                <Switch checked={ann.active} onCheckedChange={() => toggleAnnouncement(ann.id)} />
-                                <Button variant="ghost" size="sm" onClick={() => removeAnnouncement(ann.id)}>
+                                <Switch checked={ann.active} onCheckedChange={(v) => data.updateAnnouncement(ann.id, { active: v })} />
+                                <Button variant="ghost" size="sm" onClick={() => data.removeAnnouncement(ann.id)}>
                                   <Trash2 className="h-4 w-4 text-destructive" />
                                 </Button>
                               </div>
                             </div>
-                            <p className="text-sm text-muted-foreground">{ann.message}</p>
-                            <div className="flex items-center gap-2 mt-2">
-                              <Badge variant={ann.active ? "default" : "secondary"}>{ann.active ? "Active" : "Inactive"}</Badge>
-                              <span className="text-xs text-muted-foreground">{new Date(ann.createdAt).toLocaleDateString()}</span>
-                            </div>
+                            <p className="text-sm text-muted-foreground mt-1">{ann.message}</p>
                           </div>
                         ))}
-                        {announcements.length === 0 && (
-                          <p className="text-center text-muted-foreground py-8">No announcements yet</p>
+                        {data.announcements.length === 0 && (
+                          <p className="text-center text-muted-foreground py-8">No announcements</p>
                         )}
                       </div>
                     </ScrollArea>
@@ -1259,37 +1112,62 @@ const Admin = () => {
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-bebas flex items-center gap-2">
-                      <Youtube className="h-5 w-5 text-primary" />
+                      <Video className="h-5 w-5 text-primary" />
                       Add Media
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <Input placeholder="Title" value={newMedia.title} onChange={(e) => setNewMedia({...newMedia, title: e.target.value})} />
-                    <Input placeholder="YouTube URL" value={newMedia.url} onChange={(e) => setNewMedia({...newMedia, url: e.target.value})} />
-                    <div className="grid grid-cols-2 gap-4">
-                      <Select value={newMedia.type} onValueChange={(v) => setNewMedia({...newMedia, type: v as "highlight" | "interview"})}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent className="bg-background border z-50">
-                          <SelectItem value="highlight">Highlight</SelectItem>
-                          <SelectItem value="interview">Interview</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Input type="date" value={newMedia.date} onChange={(e) => setNewMedia({...newMedia, date: e.target.value})} />
+                    <div className="space-y-2">
+                      <Label>Title</Label>
+                      <Input value={newMedia.title} onChange={(e) => setNewMedia({...newMedia, title: e.target.value})} placeholder="Highlight Title" />
                     </div>
-                    <Button onClick={addMedia} className="w-full"><Plus className="h-4 w-4 mr-2" /> Add</Button>
+                    <div className="space-y-2">
+                      <Label>YouTube URL</Label>
+                      <Input value={newMedia.url} onChange={(e) => setNewMedia({...newMedia, url: e.target.value})} placeholder="https://youtube.com/watch?v=..." />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Type</Label>
+                        <Select value={newMedia.type} onValueChange={(v: "highlight" | "interview") => setNewMedia({...newMedia, type: v})}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent className="bg-background border z-50">
+                            <SelectItem value="highlight">Highlight</SelectItem>
+                            <SelectItem value="interview">Interview</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Date</Label>
+                        <Input type="date" value={newMedia.date} onChange={(e) => setNewMedia({...newMedia, date: e.target.value})} />
+                      </div>
+                    </div>
+                    <Button onClick={handleAddMedia} className="w-full gradient-orange text-primary-foreground">
+                      <Plus className="h-4 w-4 mr-2" /> Add Media
+                    </Button>
                   </CardContent>
                 </Card>
+
                 <Card>
-                  <CardHeader><CardTitle className="font-bebas">Media ({mediaItems.length})</CardTitle></CardHeader>
+                  <CardHeader>
+                    <CardTitle className="font-bebas">Media Library</CardTitle>
+                  </CardHeader>
                   <CardContent>
-                    <ScrollArea className="h-[300px]">
+                    <ScrollArea className="h-[400px]">
                       <div className="space-y-2">
-                        {mediaItems.map((item) => (
-                          <div key={item.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                            <div><p className="font-medium text-sm">{item.title}</p><p className="text-xs text-muted-foreground">{item.type} • {item.date}</p></div>
-                            <Button variant="ghost" size="sm" onClick={() => removeMedia(item.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                        {data.mediaItems.map((item) => (
+                          <div key={item.id} className="p-3 bg-muted rounded-lg flex items-center justify-between">
+                            <div>
+                              <p className="font-medium">{item.title}</p>
+                              <p className="text-xs text-muted-foreground">{item.type} • {item.date}</p>
+                            </div>
+                            <Button variant="ghost" size="sm" onClick={() => data.removeMediaItem(item.id)}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
                           </div>
                         ))}
+                        {data.mediaItems.length === 0 && (
+                          <p className="text-center text-muted-foreground py-8">No media yet</p>
+                        )}
                       </div>
                     </ScrollArea>
                   </CardContent>
@@ -1304,38 +1182,62 @@ const Admin = () => {
                   <CardHeader>
                     <CardTitle className="font-bebas flex items-center gap-2">
                       <FileText className="h-5 w-5 text-primary" />
-                      Add News
+                      Add News Article
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <Input placeholder="Title" value={newNews.title} onChange={(e) => setNewNews({...newNews, title: e.target.value})} />
-                    <Textarea placeholder="Content excerpt..." value={newNews.excerpt} onChange={(e) => setNewNews({...newNews, excerpt: e.target.value})} />
-                    <div className="grid grid-cols-2 gap-4">
-                      <Select value={newNews.category} onValueChange={(v) => setNewNews({...newNews, category: v})}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent className="bg-background border z-50">
-                          <SelectItem value="Match Report">Match Report</SelectItem>
-                          <SelectItem value="Announcement">Announcement</SelectItem>
-                          <SelectItem value="Player Spotlight">Player Spotlight</SelectItem>
-                          <SelectItem value="Tournament">Tournament</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Input type="date" value={newNews.date} onChange={(e) => setNewNews({...newNews, date: e.target.value})} />
+                    <div className="space-y-2">
+                      <Label>Title</Label>
+                      <Input value={newNews.title} onChange={(e) => setNewNews({...newNews, title: e.target.value})} placeholder="Article Title" />
                     </div>
-                    <Button onClick={addNews} className="w-full"><Plus className="h-4 w-4 mr-2" /> Add</Button>
+                    <div className="space-y-2">
+                      <Label>Excerpt</Label>
+                      <Textarea value={newNews.excerpt} onChange={(e) => setNewNews({...newNews, excerpt: e.target.value})} placeholder="Brief description..." />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Category</Label>
+                        <Select value={newNews.category} onValueChange={(v) => setNewNews({...newNews, category: v})}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent className="bg-background border z-50">
+                            <SelectItem value="Match Report">Match Report</SelectItem>
+                            <SelectItem value="Announcement">Announcement</SelectItem>
+                            <SelectItem value="Interview">Interview</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Date</Label>
+                        <Input type="date" value={newNews.date} onChange={(e) => setNewNews({...newNews, date: e.target.value})} />
+                      </div>
+                    </div>
+                    <Button onClick={handleAddNews} className="w-full gradient-orange text-primary-foreground">
+                      <Plus className="h-4 w-4 mr-2" /> Add News
+                    </Button>
                   </CardContent>
                 </Card>
+
                 <Card>
-                  <CardHeader><CardTitle className="font-bebas">News ({newsItems.length})</CardTitle></CardHeader>
+                  <CardHeader>
+                    <CardTitle className="font-bebas">Published Articles</CardTitle>
+                  </CardHeader>
                   <CardContent>
-                    <ScrollArea className="h-[300px]">
+                    <ScrollArea className="h-[400px]">
                       <div className="space-y-2">
-                        {newsItems.map((item) => (
-                          <div key={item.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                            <div><p className="font-medium text-sm">{item.title}</p><p className="text-xs text-muted-foreground">{item.category} • {item.date}</p></div>
-                            <Button variant="ghost" size="sm" onClick={() => removeNews(item.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                        {data.newsItems.map((item) => (
+                          <div key={item.id} className="p-3 bg-muted rounded-lg">
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium">{item.title}</span>
+                              <Button variant="ghost" size="sm" onClick={() => data.removeNewsItem(item.id)}>
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                              </Button>
+                            </div>
+                            <p className="text-xs text-muted-foreground">{item.category} • {item.date}</p>
                           </div>
                         ))}
+                        {data.newsItems.length === 0 && (
+                          <p className="text-center text-muted-foreground py-8">No news articles</p>
+                        )}
                       </div>
                     </ScrollArea>
                   </CardContent>
@@ -1349,32 +1251,53 @@ const Admin = () => {
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-bebas flex items-center gap-2">
-                      <Trophy className="h-5 w-5 text-primary" />
+                      <Star className="h-5 w-5 text-primary" />
                       Player of the Week
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <Input placeholder="Player Name" value={playerOfWeek.name} onChange={(e) => setPlayerOfWeek({...playerOfWeek, name: e.target.value})} />
-                    <Select value={playerOfWeek.team} onValueChange={(v) => setPlayerOfWeek({...playerOfWeek, team: v})}>
-                      <SelectTrigger><SelectValue placeholder="Team" /></SelectTrigger>
-                      <SelectContent className="bg-background border z-50">{teams.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
-                    </Select>
-                    <Textarea placeholder="Description..." value={playerOfWeek.description} onChange={(e) => setPlayerOfWeek({...playerOfWeek, description: e.target.value})} />
-                    <Button onClick={savePlayerOfWeek} className="w-full">Save</Button>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Player Name</Label>
+                        <Input value={data.playerOfWeek.name} onChange={(e) => data.updatePlayerOfWeek({...data.playerOfWeek, name: e.target.value})} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Team</Label>
+                        <Select value={data.playerOfWeek.team} onValueChange={(v) => data.updatePlayerOfWeek({...data.playerOfWeek, team: v})}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent className="bg-background border z-50">
+                            {data.teams.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Description</Label>
+                      <Textarea value={data.playerOfWeek.description} onChange={(e) => data.updatePlayerOfWeek({...data.playerOfWeek, description: e.target.value})} />
+                    </div>
                   </CardContent>
                 </Card>
+
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-bebas flex items-center gap-2">
-                      <Users className="h-5 w-5 text-primary" />
+                      <Trophy className="h-5 w-5 text-primary" />
                       Team of the Week
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <Textarea placeholder="Starting XI..." value={teamOfWeek.players} onChange={(e) => setTeamOfWeek({...teamOfWeek, players: e.target.value})} />
-                    <Textarea placeholder="Substitutes..." value={teamOfWeek.subs} onChange={(e) => setTeamOfWeek({...teamOfWeek, subs: e.target.value})} />
-                    <Textarea placeholder="Description..." value={teamOfWeek.description} onChange={(e) => setTeamOfWeek({...teamOfWeek, description: e.target.value})} />
-                    <Button onClick={saveTeamOfWeek} className="w-full">Save</Button>
+                    <div className="space-y-2">
+                      <Label>Starting XI (comma separated)</Label>
+                      <Textarea value={data.teamOfWeek.players} onChange={(e) => data.updateTeamOfWeek({...data.teamOfWeek, players: e.target.value})} placeholder="Player1, Player2, ..." />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Substitutes (comma separated)</Label>
+                      <Input value={data.teamOfWeek.subs} onChange={(e) => data.updateTeamOfWeek({...data.teamOfWeek, subs: e.target.value})} placeholder="Sub1, Sub2, ..." />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Description</Label>
+                      <Textarea value={data.teamOfWeek.description} onChange={(e) => data.updateTeamOfWeek({...data.teamOfWeek, description: e.target.value})} />
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -1382,7 +1305,7 @@ const Admin = () => {
           </Tabs>
         </div>
       </main>
-
+      
       <Footer />
     </div>
   );
